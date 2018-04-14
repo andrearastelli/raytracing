@@ -16,4 +16,4 @@ script:
   - cmake -H. -Bbuild
   - cd build
   - make
-  - ./build/raytracing
+  - ./raytracing
