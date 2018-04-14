@@ -11,13 +11,13 @@ configuration:
   - Release
 
 before_build:
-  - cmake -H. -BBuild -A%PLATFORM%
+  - cmake -H. -Bbuild -A%PLATFORM%
 
 build:
-  project: Build\raytracing.sln
+  project: build\raytracing.sln
   parallel: true
   verbosity: normal
 
 test_script:
-  - cd Build
+  - cd build
   - raytracing.exe
