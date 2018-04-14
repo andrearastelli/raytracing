@@ -11,5 +11,7 @@ install:
   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 90
 
 script:
-  - g++ main.cpp -std=c++17 -o raytracing
-  - ./raytracing
+#  - g++ main.cpp -std=c++17 -o raytracing
+  - mkdir build
+  - cmake -H. -Bbuild
+  - ./build/raytracing
