@@ -1,0 +1,23 @@
+os:
+  - Visual Studio 2017
+  - Visual Studio 2015
+
+platform:
+  - Win32
+  - x64
+
+configuration:
+  - Debug
+  - Release
+
+before_build:
+  - cmake -H. -BBuild -A%PLATFORM%
+
+build:
+  project: Build\raytracing.sln
+  parallel: true
+  verbosity: normal
+
+test_script:
+  - cd Build
+  - raytracing.exe
