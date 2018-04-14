@@ -20,5 +20,6 @@ build:
 
 test_script:
   - cd build
+  - cmake --build .
   - dir
   - raytracing.exe
