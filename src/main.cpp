@@ -1,10 +1,5 @@
 #include <iostream>
 
-class Vec3
-{
-private:
-    float x, y, z;
-};
 
 int main()
 {
