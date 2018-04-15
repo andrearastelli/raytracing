@@ -2,7 +2,7 @@
 
 class vec3
 {
-public:
+private:
     float x, y, z;
 };
 
