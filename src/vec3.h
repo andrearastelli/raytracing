@@ -1,6 +1,6 @@
 #include <cmath>
 
-class vec3
+class Vec3
 {
 private:
     float v[3];
