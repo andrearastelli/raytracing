@@ -1,6 +1,6 @@
 #include <iostream>
 
-class vec3
+class Vec3
 {
 private:
     float x, y, z;
