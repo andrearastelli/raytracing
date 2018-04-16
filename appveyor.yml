@@ -19,5 +19,5 @@ build:
   verbosity: normal
 
 test_script:
-  - .\bin\raytracing.exe
+  - .\bin\%CONFIGURATION%\raytracing.exe
   #- .\build\%CONFIGURATION%\raytracing.exe
