@@ -1,14 +1,30 @@
 #include <iostream>
 #include <fstream>
-#include <filesystem>
+
 
 class Image
 {
+
 private:
-    std::string fileame;
+    std::string filename;
+    std::ofstream output_file;
+
 public:
-    Image() { std::cout << "Tmp dir: " << std::filesystem::tmp_directoy_path() << std::endl; }
-    Image(std::string filename): filename{filename} {}
+    Image() = delete;
+    Image(const std::string &filename);
+    ~Image();
 
 };
+
+
+Image::Image(const std::string &filename) : filename{filename}
+{
+    output_file.open(filename);
+}
+
+
+Image::~Image()
+{
+    output_file.close();
+}
 

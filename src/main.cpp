@@ -4,7 +4,7 @@
 
 int main()
 {
-    std::cout << "Hello, World!" << std::endl;
-    Image i;
+    Image i("test.ppm");
+
     return 0;
 }

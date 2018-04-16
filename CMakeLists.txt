@@ -12,8 +12,8 @@ if(MSVC)
 endif(MSVC)
 
 
-set(CMAKE_INSTALL_PREFIX "./build")
+set(EXECUTABLE_OUTPUT_PATH "${CMAKE_HOME_DIRECTORY}/bin")
 
+include_directories(${CMAKE_SOURCE_DIR}/src)
 
-file(GLOB APP_SOURCE_FILES "./src/*.cpp")
-add_executable(raytracing ${APP_SOURCE_FILES})
+add_subdirectory(src)
