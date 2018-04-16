@@ -11,10 +11,11 @@ if(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++17")
 endif(MSVC)
 
-target_compile_features(raytracing PUBLIC cxx_std_17)
-
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_HOME_DIRECTORY}/bin")
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 
 add_subdirectory(src)
+
+target_compile_features(raytracing PUBLIC cxx_std_17)
+
