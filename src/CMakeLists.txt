@@ -3,6 +3,7 @@ set(TARGET_NAME raytracing)
 set(SRC
         vec3.h
         image.h
+        color.h
 )
 
 add_executable(
