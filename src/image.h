@@ -88,8 +88,6 @@ Image::~Image()
 
 void Image::write(const Color &color)
 {
-    output_file << static_cast<int>(color.r() * 255.99) << " "
-                << static_cast<int>(color.g() * 255.99) << " "
-                << static_cast<int>(color.b() * 255.99) << "\n";
+    output_file << color << "\n";
 }
 
