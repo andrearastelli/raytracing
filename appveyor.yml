@@ -8,7 +8,7 @@ platform:
 
 configuration:
   - Debug
-  - Release
+#  - Release # Removed due to duplication and longer time for completing the tests.
 
 before_build:
   - cmake -H. -Bbuild -A%PLATFORM%
@@ -20,4 +20,3 @@ build:
 
 test_script:
   - .\bin\%CONFIGURATION%\raytracing.exe
-  #- .\build\%CONFIGURATION%\raytracing.exe
