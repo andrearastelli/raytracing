@@ -4,6 +4,7 @@ set(SRC
         vec3.h
         image.h
         color.h
+        ray.h
 )
 
 add_executable(
