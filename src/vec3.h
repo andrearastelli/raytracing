@@ -1,3 +1,6 @@
+#ifndef RAYTRACING_VEC3_H
+#define RAYTRACING_VEC3_H
+
 #include <cmath>
 #include <array>
 #include <iostream>
@@ -22,7 +25,7 @@ public:
 	inline float operator[](int i) const { return v[i]; }
 	inline float& operator[](int i) { return v[i]; }
 	
-	inline Vec3& operator+=(const Vec3 &v);
+	inline Vec3& operator+=(const Vec3 &v1);
 	inline Vec3& operator-=(const Vec3 &v);
 	inline Vec3& operator*=(const Vec3 &v);
 	inline Vec3& operator/=(const Vec3 &v);
@@ -54,7 +57,7 @@ inline void Vec3::normalize()
 }
 
 
-inline std::ostream& operator<<(std::ostream &os, const Vec3& &t)
+inline std::ostream& operator<<(std::ostream &os, const Vec3 &t)
 {
 	os << t.x() << t.y() << t.z();
 	return os;
@@ -62,22 +65,22 @@ inline std::ostream& operator<<(std::ostream &os, const Vec3& &t)
 
 inline Vec3 operator+(const Vec3 &v1, const Vec3 &v2)
 {
-	return Vec3(v1.v[0]+v2.v[0], v1.v[1]+v2.v[1], v1.v[2]+v2.v[2]);
+	return Vec3(v1.x()+v2.x(), v1.y()+v2.y(), v1.z()+v2.z());
 }
 
 inline Vec3 operator-(const Vec3 &v1, const Vec3 &v2)
 {
-	return Vec3(v1.v[0]-v2.v[0], v1.v[1]-v2.v[1], v1.v[2]-v2.v[2]);
+	return Vec3(v1.x()-v2.x(), v1.y()-v2.y(), v1.z()-v2.z());
 }
 
 inline Vec3 operator*(const Vec3 &v1, const Vec3 &v2)
 {
-	return Vec3(v1.v[0]*v2.v[0], v1.v[1]*v2.v[1], v1.v[2]*v2.v[2]);
+	return Vec3(v1.x()*v2.x(), v1.y()*v2.y(), v1.z()*v2.z());
 }
 
 inline Vec3 operator/(const Vec3 &v1, const Vec3 &v2)
 {
-	return Vec3(v1.v[0]/v2.v[0], v1.v[1]/v2.v[1], v1.v[2]/v2.v[2]);
+	return Vec3(v1.x()/v2.x(), v1.y()/v2.y(), v1.z()/v2.z());
 }
 
 /**
@@ -90,7 +93,7 @@ inline Vec3 operator/(const Vec3 &v1, const Vec3 &v2)
  */
 inline Vec3 operator*(const Vec3 &v, float t)
 {
-	return Vec3(t*v.v[0], t*v.v[1], t*v.v[2]);
+	return Vec3(t*v.x(), t*v.y(), t*v.z());
 }
 
 /**
@@ -103,12 +106,12 @@ inline Vec3 operator*(const Vec3 &v, float t)
  */
 inline Vec3 operator*(float t, const Vec3 &v)
 {
-    return Vec3(t*v.v[0], t*v.v[1], t*v.v[2]);
+    return Vec3(t*v.x(), t*v.y(), t*v.z());
 }
 
 inline Vec3 operator/(const Vec3 &v, float t)
 {
-	return Vec3(v.v[0]/t, v.v[1]/t, v.v[2]/t);
+	return Vec3(v.x()/t, v.y()/t, v.z()/t);
 }
 
 inline float dot(const Vec3 &v1, const Vec3 &v2)
@@ -125,35 +128,35 @@ inline Vec3 cross(const Vec3 &v1, const Vec3 &v2)
 	);
 }
 
-inline Vec3& Vec3::operator+=(const Vec3 &v)
+inline Vec3& Vec3::operator+=(const Vec3 &v1)
 {
-	v[0] += v.v[0];
-	v[1] += v.v[1];
-	v[2] += v.v[2];
+	v[0] += v1.v[0];
+	v[1] += v1.v[1];
+	v[2] += v1.v[2];
 	return *this;
 }
 
-inline Vec3& Vec3::operator-=(const Vec3 &v)
+inline Vec3& Vec3::operator-=(const Vec3 &v1)
 {
-	v[0] -= v.v[0];
-	v[1] -= v.v[1];
-	v[2] -= v.v[2];
+	v[0] -= v1.v[0];
+	v[1] -= v1.v[1];
+	v[2] -= v1.v[2];
 	return *this;
 }
 
-inline Vec3& Vec3::operator*=(const Vec3 &v)
+inline Vec3& Vec3::operator*=(const Vec3 &v1)
 {
-	v[0] *= v.v[0];
-	v[1] *= v.v[1];
-	v[2] *= v.v[2];
+	v[0] *= v1.v[0];
+	v[1] *= v1.v[1];
+	v[2] *= v1.v[2];
 	return *this;
 }
 
-inline Vec3& Vec3::operator/=(const Vec3 &v)
+inline Vec3& Vec3::operator/=(const Vec3 &v1)
 {
-	v[0] /= v.v[0];
-	v[1] /= v.v[1];
-	v[2] /= v.v[2];
+	v[0] /= v1.v[0];
+	v[1] /= v1.v[1];
+	v[2] /= v1.v[2];
 	return *this;
 }
 
@@ -177,3 +180,5 @@ inline Vec3 unit_vector(Vec3 v)
 {
 	return v / v.length();
 }
+
+#endif //RAYTRACING_VEC3_H
