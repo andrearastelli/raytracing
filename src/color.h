@@ -2,6 +2,9 @@
 #define RAYTRACING_COLOR_H
 
 
+#include "vec3.h"
+
+
 #include <array>
 #include <sstream>
 #include <fstream>
@@ -48,6 +51,8 @@ public:
      * @param b Blue component.
      */
     Color(float r, float g, float b): c{r, g, b} {}
+
+    Color(const Vec3 &v): c{v.x(), v.y(), v.z()} {}
 
     /**
      * Default destructor.

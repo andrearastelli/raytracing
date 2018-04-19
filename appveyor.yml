@@ -3,12 +3,11 @@ os:
   - Visual Studio 2015
 
 platform:
-  - Win32
   - x64
 
 configuration:
   - Debug
-  - Release
+#  - Release # Removed due to duplication and longer time for completing the tests.
 
 before_build:
   - cmake -H. -Bbuild -A%PLATFORM%
@@ -20,4 +19,3 @@ build:
 
 test_script:
   - .\bin\%CONFIGURATION%\raytracing.exe
-  #- .\build\%CONFIGURATION%\raytracing.exe
