@@ -26,16 +26,16 @@ public:
 	inline float& operator[](int i) { return v[i]; }
 	
 	inline Vec3& operator+=(const Vec3 &v1);
-	inline Vec3& operator-=(const Vec3 &v);
-	inline Vec3& operator*=(const Vec3 &v);
-	inline Vec3& operator/=(const Vec3 &v);
+	inline Vec3& operator-=(const Vec3 &v1);
+	inline Vec3& operator*=(const Vec3 &v1);
+	inline Vec3& operator/=(const Vec3 &v1);
 	
 	inline Vec3& operator*=(const float t);
 	inline Vec3& operator/=(const float t);
 	
 	inline float length() const 
 	{
-		return std::sqrtf(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
+		return std::sqrt(squared_length());
 	}
 	
 	inline float squared_length() const 
