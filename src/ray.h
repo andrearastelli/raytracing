@@ -25,8 +25,22 @@ public:
 };
 
 
+bool hit_sphere(const Vec3 &center, float radius, const Ray &r)
+{
+    auto oc = r.origin() - center;
+    auto a = dot(r.direction(), r.direction());
+    auto b = 2.0f * dot(oc, r.direction());
+    auto c = dot(oc, oc) - radius * radius;
+    auto discriminant = b*b - 4*a*c;
+
+    return (discriminant > 0);
+}
+
+
 Color ray_color(const Ray &r)
 {
+    if (hit_sphere(Vec3(0.0f, 0.0f, -1.0f), 0.5, r))
+        return Color(1.0f, 0.0f, 0.0f);
     Vec3 unit_direction = unit_vector(r.direction());
     float t = 0.5f * (unit_direction.y() + 1.0f);
     return (1.0f - t) * Vec3(1.0f, 1.0f, 1.0f) + t * Vec3(0.5f, 0.7f, 1.0f);
