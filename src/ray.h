@@ -25,7 +25,7 @@ public:
 };
 
 
-bool hit_sphere(const Vec3 &center, float radius, const Ray &r)
+float hit_sphere(const Vec3 &center, float radius, const Ray &r)
 {
     auto oc = r.origin() - center;
     auto a = dot(r.direction(), r.direction());
@@ -33,16 +33,24 @@ bool hit_sphere(const Vec3 &center, float radius, const Ray &r)
     auto c = dot(oc, oc) - radius * radius;
     auto discriminant = b*b - 4*a*c;
 
-    return (discriminant > 0);
+    if (discriminant < 0)
+        return -1.0f;
+    else
+        return (-b - std::sqrt(discriminant)) / (2.0f * a);
 }
 
 
 Color ray_color(const Ray &r)
 {
-    if (hit_sphere(Vec3(0.0f, 0.0f, -1.0f), 0.5, r))
-        return Color(1.0f, 0.0f, 0.0f);
-    Vec3 unit_direction = unit_vector(r.direction());
-    float t = 0.5f * (unit_direction.y() + 1.0f);
+    auto t = hit_sphere(Vec3(0.0f, 0.0f, -1.0f), 0.5, r);
+    if (t > 0.0f)
+    {
+        auto N = unit_vector(r.point_at_parameter(t) - Vec3(0.0f, 0.0f, -1.0f));
+        return 0.5f * Vec3(N.x()+1, N.y()+1, N.z()+1);
+    }
+
+    auto unit_direction = unit_vector(r.direction());
+    t = 0.5f * (unit_direction.y() + 1.0f);
     return (1.0f - t) * Vec3(1.0f, 1.0f, 1.0f) + t * Vec3(0.5f, 0.7f, 1.0f);
 }
 
