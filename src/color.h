@@ -104,4 +104,22 @@ inline std::ofstream& operator<<(std::ofstream &ofs, const Color &color)
 }
 
 
+inline Color operator*(float t, const Color &c)
+{
+    return {t * c.r(), t * c.g(), t * c.b()};
+}
+
+
+inline Color operator*(const Color &c, float t)
+{
+    return t * c;
+}
+
+
+inline Color operator+(const Color &a, const Color &b)
+{
+    return {a.r() + b.r(), a.g() + b.g(), a.b() + b.b()};
+}
+
+
 #endif //RAYTRACING_COLOR_H
