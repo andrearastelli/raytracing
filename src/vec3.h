@@ -35,7 +35,7 @@ public:
 	
 	inline float length() const 
 	{
-		return std::sqrt(squared_length());
+		return std::sqrtf(squared_length());
 	}
 	
 	inline float squared_length() const 
