@@ -40,19 +40,4 @@ float hit_sphere(const Vec3 &center, float radius, const Ray &r)
 }
 
 
-Color ray_color(const Ray &r)
-{
-    auto t = hit_sphere(Vec3(0.0f, 0.0f, -1.0f), 0.5, r);
-    if (t > 0.0f)
-    {
-        auto N = unit_vector(r.point_at_parameter(t) - Vec3(0.0f, 0.0f, -1.0f));
-        return 0.5f * Vec3(N.x()+1, N.y()+1, N.z()+1);
-    }
-
-    auto unit_direction = unit_vector(r.direction());
-    t = 0.5f * (unit_direction.y() + 1.0f);
-    return (1.0f - t) * Vec3(1.0f, 1.0f, 1.0f) + t * Vec3(0.5f, 0.7f, 1.0f);
-}
-
-
 #endif //RAYTRACING_RAY_H
