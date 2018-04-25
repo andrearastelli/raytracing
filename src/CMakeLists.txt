@@ -5,6 +5,9 @@ set(SRC
         image.h
         color.h
         ray.h
+        hitable.h
+        sphere.h
+        hitablelist.h
 )
 
 add_executable(

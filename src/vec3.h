@@ -1,9 +1,9 @@
 #ifndef RAYTRACING_VEC3_H
 #define RAYTRACING_VEC3_H
 
-#include <cmath>
-#include <array>
 #include <iostream>
+#include <array>
+#include <cmath>
 
 
 class Vec3
