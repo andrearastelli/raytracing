@@ -39,7 +39,7 @@ float hit_sphere(const Vec3 &center, float radius, const Ray &r)
     if (discriminant < 0)
         return -1.0f;
     else
-        return (-b - std::sqrtf(discriminant)) / (2.0f * a);
+        return (-b - std::sqrt(discriminant)) / (2.0f * a);
 }
 
 

@@ -1,9 +1,9 @@
 #ifndef RAYTRACING_VEC3_H
 #define RAYTRACING_VEC3_H
 
-#include <cmath>
-#include <array>
 #include <iostream>
+#include <array>
+#include <cmath>
 
 
 class Vec3
@@ -35,7 +35,7 @@ public:
 	
 	inline float length() const 
 	{
-		return std::sqrtf(squared_length());
+		return std::sqrt(squared_length());
 	}
 	
 	inline float squared_length() const 
