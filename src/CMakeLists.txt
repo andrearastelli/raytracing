@@ -8,6 +8,7 @@ set(SRC
         hitable.h
         sphere.h
         hitablelist.h
+        camera.h
 )
 
 add_executable(
