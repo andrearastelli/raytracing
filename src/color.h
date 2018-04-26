@@ -66,6 +66,8 @@ public:
 
     inline Color& operator+=(const Color &a);
     inline Color& operator/=(float a);
+
+    inline Color& gamma();
 };
 
 
@@ -84,6 +86,16 @@ Color& Color::operator/=(float a)
     c[0] /= a;
     c[1] /= a;
     c[2] /= a;
+
+    return *this;
+}
+
+
+Color& Color::gamma()
+{
+    c[0] = std::sqrt(c[0]);
+    c[1] = std::sqrt(c[1]);
+    c[2] = std::sqrt(c[2]);
 
     return *this;
 }
