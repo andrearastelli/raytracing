@@ -9,6 +9,10 @@
 #include "hitablelist.h"
 #include "camera.h"
 
+std::random_device d;
+std::mt19937 m{d()};
+std::uniform_real_distribution<float> dist(0.0f, 1.0f);
+
 Vec3 random_in_unit_sphere();
 
 Color ray_color(const Ray &r, Hitable *world);
@@ -16,16 +20,18 @@ Color ray_color(const Ray &r, Hitable *world);
 
 int main()
 {
-    Image i("test_diffuse.ppm");
+    Image image("test_diffuse.ppm");
 
     auto samples = 100;
 
-    Hitable *list[2];
+    Hitable *list[3];
 
-    list[0] = new Sphere(Vec3(0.0f, 0.0f, -1.0f), 0.5f);
-    list[1] = new Sphere(Vec3(0.0f, -5.0f, 0.0f), 5.0f);
+    int i = 0;
+    list[i++] = new Sphere(Vec3(0.0f, -1000.0f, 0.0f), 999.5f);
+    list[i++] = new Sphere(Vec3(0.0f, 0.0f, -1.0f), 0.5f);
+    list[i++] = new Sphere(Vec3(1.0f, 0.0f, -1.0f), 0.5f);
 
-    Hitable *world = new HitableList(list, 2);
+    Hitable *world = new HitableList(list, i);
 
     Camera cam;
 
@@ -34,16 +40,16 @@ int main()
     std::mt19937 m{d()};
     std::uniform_real_distribution<float> dist(0.0f, 1.0f);
 
-    for (int idY=i.height() - 1; idY>=0; --idY)
+    for (int idY=image.height() - 1; idY>=0; --idY)
     {
-        for (int idX=0; idX<i.width(); ++idX)
+        for (int idX=0; idX<image.width(); ++idX)
         {
             auto col = Color(0.0f, 0.0f, 0.0f);
 
             for (int s=0; s<samples; ++s)
             {
-                float u = (idX + dist(m)) / static_cast<float>(i.width());
-                float v = (idY + dist(m)) / static_cast<float>(i.height());
+                float u = (idX + dist(m)) / static_cast<float>(image.width());
+                float v = (idY + dist(m)) / static_cast<float>(image.height());
 
                 auto r = cam.get_ray(u, v);
                 col += ray_color(r, world);
@@ -51,7 +57,7 @@ int main()
 
             col /= static_cast<float>(samples);
 
-            i.write(col.gamma());
+            image.write(col.gamma());
         }
     }
 
@@ -65,7 +71,7 @@ Vec3 random_in_unit_sphere()
 
     do {
 
-        p = 2.0f * Vec3(drand48(), drand48(), drand48()) - Vec3(1.0f, 1.0f, 1.0f);
+        p = 2.0f * Vec3(dist(m), dist(m), dist(m)) - Vec3(1.0f, 1.0f, 1.0f);
 
     } while(p.squared_length() >= 1.0f);
 
