@@ -22,12 +22,12 @@ int main()
 {
     Image image("test_diffuse.ppm");
 
-    auto samples = 100;
+    auto samples = 8;
 
     Hitable *list[3];
 
     int i = 0;
-    list[i++] = new Sphere(Vec3(0.0f, -1000.0f, 0.0f), 999.5f);
+    list[i++] = new Sphere(Vec3(0.0f, -1000.0f, 0.0f), 1000.0f - 0.1f);
     list[i++] = new Sphere(Vec3(0.0f, 0.0f, -1.0f), 0.5f);
     list[i++] = new Sphere(Vec3(1.0f, 0.0f, -1.0f), 0.5f);
 
@@ -38,7 +38,8 @@ int main()
     // RANDOM GENERATORS
     std::random_device d;
     std::mt19937 m{d()};
-    std::uniform_real_distribution<float> dist(0.0f, 1.0f);
+    auto max_rand_jitter = 1.0f - 1.0f / samples;
+    std::uniform_real_distribution<float> jitter(0.0f, max_rand_jitter);
 
     for (int idY=image.height() - 1; idY>=0; --idY)
     {
@@ -48,8 +49,8 @@ int main()
 
             for (int s=0; s<samples; ++s)
             {
-                float u = (idX + dist(m)) / static_cast<float>(image.width());
-                float v = (idY + dist(m)) / static_cast<float>(image.height());
+                float u = (idX + jitter(m)) / static_cast<float>(image.width());
+                float v = (idY + jitter(m)) / static_cast<float>(image.height());
 
                 auto r = cam.get_ray(u, v);
                 col += ray_color(r, world);
