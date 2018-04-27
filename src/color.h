@@ -63,7 +63,30 @@ public:
     inline float r() const { return c[0]; }
     inline float g() const { return c[1]; }
     inline float b() const { return c[2]; }
+
+    inline Color& operator+=(const Color &a);
+    inline Color& operator/=(float a);
 };
+
+
+Color& Color::operator+=(const Color &a)
+{
+    c[0] += a.r();
+    c[1] += a.g();
+    c[2] += a.b();
+
+    return *this;
+}
+
+
+Color& Color::operator/=(float a)
+{
+    c[0] /= a;
+    c[1] /= a;
+    c[2] /= a;
+
+    return *this;
+}
 
 
 /**

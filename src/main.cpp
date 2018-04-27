@@ -1,11 +1,13 @@
 #include <iostream>
 #include <limits>
+#include <random>
 
 #include "image.h"
 #include "vec3.h"
 #include "ray.h"
 #include "sphere.h"
 #include "hitablelist.h"
+#include "camera.h"
 
 
 Color ray_color(const Ray &r, Hitable *world);
@@ -13,12 +15,9 @@ Color ray_color(const Ray &r, Hitable *world);
 
 int main()
 {
-    Image i("test_hitable.ppm");
+    Image i("test_antialiasing.ppm");
 
-    auto lower_corner = Vec3(-2.0f, -1.0f, -1.0f);
-    auto horizontal = Vec3(4.0f, 0.0f, 0.0f);
-    auto vertical = Vec3(0.0f, 2.0f, 0.0f);
-    auto origin = Vec3(0.0f, 0.0f, 0.0f);
+    auto samples = 100;
 
     Hitable *list[2];
 
@@ -27,16 +26,29 @@ int main()
 
     Hitable *world = new HitableList(list, 2);
 
+    Camera cam;
+
+    // RANDOM GENERATORS
+    std::random_device d;
+    std::mt19937 m{d()};
+    std::uniform_real_distribution<float> dist(0.0f, 1.0f);
+
     for (int idY=i.height() - 1; idY>=0; --idY)
     {
         for (int idX=0; idX<i.width(); ++idX)
         {
-            float u = idX / static_cast<float>(i.width());
-            float v = idY / static_cast<float>(i.height());
+            auto col = Color(0.0f, 0.0f, 0.0f);
 
-            auto r = Ray(origin, lower_corner + u * horizontal + v * vertical);
+            for (int s=0; s<samples; ++s)
+            {
+                float u = (idX + dist(m)) / static_cast<float>(i.width());
+                float v = (idY + dist(m)) / static_cast<float>(i.height());
 
-            auto col = ray_color(r, world);
+                auto r = cam.get_ray(u, v);
+                col += ray_color(r, world);
+            }
+
+            col /= static_cast<float>(samples);
 
             i.write(col);
         }
