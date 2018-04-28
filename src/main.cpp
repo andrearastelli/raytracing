@@ -9,40 +9,48 @@
 #include "hitablelist.h"
 #include "camera.h"
 
+std::random_device d;
+std::mt19937 m{d()};
+std::uniform_real_distribution<float> dist(0.0f, 1.0f);
+
+Vec3 random_in_unit_sphere();
 
 Color ray_color(const Ray &r, Hitable *world);
 
 
 int main()
 {
-    Image i("test_antialiasing.ppm");
+    Image image("test_diffuse.ppm");
 
-    auto samples = 100;
+    auto samples = 8;
 
-    Hitable *list[2];
+    Hitable *list[3];
 
-    list[0] = new Sphere(Vec3(0.0f, 0.0f, -1.0f), 0.5f);
-    list[1] = new Sphere(Vec3(0.0f, -1000.0f, 0.0f), 1000.0f);
+    int i = 0;
+    list[i++] = new Sphere(Vec3(0.0f, -1000.0f, 0.0f), 1000.0f - 0.1f);
+    list[i++] = new Sphere(Vec3(0.0f, 0.0f, -1.0f), 0.5f);
+    list[i++] = new Sphere(Vec3(1.0f, 0.0f, -1.0f), 0.5f);
 
-    Hitable *world = new HitableList(list, 2);
+    Hitable *world = new HitableList(list, i);
 
     Camera cam;
 
     // RANDOM GENERATORS
     std::random_device d;
     std::mt19937 m{d()};
-    std::uniform_real_distribution<float> dist(0.0f, 1.0f);
+    auto max_rand_jitter = 1.0f - 1.0f / samples;
+    std::uniform_real_distribution<float> jitter(0.0f, max_rand_jitter);
 
-    for (int idY=i.height() - 1; idY>=0; --idY)
+    for (int idY=image.height() - 1; idY>=0; --idY)
     {
-        for (int idX=0; idX<i.width(); ++idX)
+        for (int idX=0; idX<image.width(); ++idX)
         {
             auto col = Color(0.0f, 0.0f, 0.0f);
 
             for (int s=0; s<samples; ++s)
             {
-                float u = (idX + dist(m)) / static_cast<float>(i.width());
-                float v = (idY + dist(m)) / static_cast<float>(i.height());
+                float u = (idX + jitter(m)) / static_cast<float>(image.width());
+                float v = (idY + jitter(m)) / static_cast<float>(image.height());
 
                 auto r = cam.get_ray(u, v);
                 col += ray_color(r, world);
@@ -50,11 +58,25 @@ int main()
 
             col /= static_cast<float>(samples);
 
-            i.write(col);
+            image.write(col.gamma());
         }
     }
 
     return 0;
+}
+
+
+Vec3 random_in_unit_sphere()
+{
+    Vec3 p;
+
+    do {
+
+        p = 2.0f * Vec3(dist(m), dist(m), dist(m)) - Vec3(1.0f, 1.0f, 1.0f);
+
+    } while(p.squared_length() >= 1.0f);
+
+    return p;
 }
 
 
@@ -64,7 +86,8 @@ Color ray_color(const Ray &r, Hitable *world)
 
     if (world->hit(r, 0.001f, std::numeric_limits<float>::max(), rec))
     {
-        return 0.5f * Color(rec.normal.x() + 1, rec.normal.y() + 1, rec.normal.z() + 1);
+        auto target = rec.p + rec.normal + random_in_unit_sphere();
+        return 0.5f * ray_color(Ray(rec.p, target - rec.p), world);
     }
     else
     {
