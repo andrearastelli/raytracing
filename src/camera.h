@@ -24,8 +24,8 @@ public:
 
 Camera::Camera(float vfov, float aspect)
 {
-    auto theta = vfov * M_PI / 180.0f;
-    auto half_height = tanf(theta / 2.0f);
+    auto theta = static_cast<float>(vfov * M_PI / 180.0f);
+    auto half_height = static_cast<float>(tan(theta / 2.0f));
     auto half_width = aspect * half_height;
 
     lower_left_corner = {-half_width, -half_height, -1.0f};
@@ -38,8 +38,8 @@ Camera::Camera(float vfov, float aspect)
 Camera::Camera(Vec3 lookfrom, Vec3 lookat, Vec3 up, float vfov, float aspect)
 {
     Vec3 u, v, w;
-    auto theta = vfov * M_PI / 180.0f;
-    auto half_height = tanf(theta / 2.0f);
+    auto theta = static_cast<float>(vfov * M_PI / 180.0f);
+    auto half_height = static_cast<float>(tan(theta / 2.0f));
     auto half_width = aspect * half_height;
 
     origin = lookfrom;
