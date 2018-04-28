@@ -22,10 +22,10 @@ int main()
 {
     Image image("test_camera.ppm");
 
-    auto samples = 32;
+    auto samples = 256;
 
     Hitable *list[3];
-    auto R = cosf(M_PI / 4.0f);
+    auto R = static_cast<float>(cos(M_PI / 4.0f));
 
     int i = 0;
     list[i++] = new Sphere(Vec3(0.0f, -1000.0f, 0.0f), 1000.0f - 0.5f);
@@ -39,7 +39,7 @@ int main()
         Vec3(-2.0f, 2.0f, 1.0f),
         Vec3(0.0f, 0.0f, -1.0f),
         Vec3(0.0f, 1.0f, 0.0f),
-        90,
+        20,
         static_cast<float>(image.width()) / static_cast<float>(image.height())
     };
 
