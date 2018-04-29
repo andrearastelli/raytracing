@@ -13,6 +13,13 @@ private:
     std::array<float, 3> v;
 
 public:
+	static const Vec3 zero = {0.0f, 0.0f, 0.0f};
+	static const Vec3 one = {1.0f, 1.0f, 1.0f};
+	static const Vec3 X = {1.0f, 0.0f, 0.0f};
+	static const Vec3 Y = {0.0f, 1.0f, 0.0f};
+	static const Vec3 Z = {0.0f, 0.0f, 1.0f};
+
+public:
     Vec3(float x, float y, float z): v{x, y, z} {}
     Vec3(): v{0.0f, 0.0f, 0.0f} {}
 
@@ -63,25 +70,30 @@ inline std::ostream& operator<<(std::ostream &os, const Vec3 &t)
 	return os;
 }
 
+
 inline Vec3 operator+(const Vec3 &v1, const Vec3 &v2)
 {
 	return Vec3(v1.x()+v2.x(), v1.y()+v2.y(), v1.z()+v2.z());
 }
+
 
 inline Vec3 operator-(const Vec3 &v1, const Vec3 &v2)
 {
 	return Vec3(v1.x()-v2.x(), v1.y()-v2.y(), v1.z()-v2.z());
 }
 
+
 inline Vec3 operator*(const Vec3 &v1, const Vec3 &v2)
 {
 	return Vec3(v1.x()*v2.x(), v1.y()*v2.y(), v1.z()*v2.z());
 }
 
+
 inline Vec3 operator/(const Vec3 &v1, const Vec3 &v2)
 {
 	return Vec3(v1.x()/v2.x(), v1.y()/v2.y(), v1.z()/v2.z());
 }
+
 
 /**
  * Vec3 * float.
@@ -96,6 +108,7 @@ inline Vec3 operator*(const Vec3 &v, float t)
 	return Vec3(t*v.x(), t*v.y(), t*v.z());
 }
 
+
 /**
  * float * Vec3.
  *
@@ -109,15 +122,18 @@ inline Vec3 operator*(float t, const Vec3 &v)
     return Vec3(t*v.x(), t*v.y(), t*v.z());
 }
 
+
 inline Vec3 operator/(const Vec3 &v, float t)
 {
 	return Vec3(v.x()/t, v.y()/t, v.z()/t);
 }
 
+
 inline float dot(const Vec3 &v1, const Vec3 &v2)
 {
 	return v1.x()*v2.x() + v1.y()*v2.y() + v1.z()*v2.z();
 }
+
 
 inline Vec3 cross(const Vec3 &v1, const Vec3 &v2)
 {
@@ -128,6 +144,7 @@ inline Vec3 cross(const Vec3 &v1, const Vec3 &v2)
 	);
 }
 
+
 inline Vec3& Vec3::operator+=(const Vec3 &v1)
 {
 	v[0] += v1.v[0];
@@ -135,6 +152,7 @@ inline Vec3& Vec3::operator+=(const Vec3 &v1)
 	v[2] += v1.v[2];
 	return *this;
 }
+
 
 inline Vec3& Vec3::operator-=(const Vec3 &v1)
 {
@@ -144,6 +162,7 @@ inline Vec3& Vec3::operator-=(const Vec3 &v1)
 	return *this;
 }
 
+
 inline Vec3& Vec3::operator*=(const Vec3 &v1)
 {
 	v[0] *= v1.v[0];
@@ -151,6 +170,7 @@ inline Vec3& Vec3::operator*=(const Vec3 &v1)
 	v[2] *= v1.v[2];
 	return *this;
 }
+
 
 inline Vec3& Vec3::operator/=(const Vec3 &v1)
 {
@@ -160,6 +180,7 @@ inline Vec3& Vec3::operator/=(const Vec3 &v1)
 	return *this;
 }
 
+
 inline Vec3& Vec3::operator*=(const float t)
 {
 	v[0] *= t;
@@ -168,6 +189,7 @@ inline Vec3& Vec3::operator*=(const float t)
 	return *this;
 }
 
+
 inline Vec3& Vec3::operator/=(const float t)
 {
 	v[0] /= t;
@@ -175,6 +197,7 @@ inline Vec3& Vec3::operator/=(const float t)
 	v[2] /= t;
 	return *this;
 }
+
 
 inline Vec3 unit_vector(Vec3 v)
 {
