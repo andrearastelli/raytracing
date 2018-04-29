@@ -10,11 +10,6 @@
 #include "camera.h"
 #include "material.h"
 
-std::random_device d;
-std::mt19937 m{d()};
-std::uniform_real_distribution<float> dist(0.0f, 1.0f);
-
-Vec3 random_in_unit_sphere();
 
 Color ray_color(const Ray &r, Hitable *world, int depth);
 
@@ -31,7 +26,7 @@ int main()
     list[i++] = new Sphere(Vec3(0.0f, -1000.0f, 0.0f), 1000.0f - 0.1f, new Lambertian(Color(0.8f, 0.3f, 0.3f)));
     list[i++] = new Sphere(Vec3(0.0f, 0.0f, -1.0f), 0.5f, new Lambertian(Color(0.8f, 0.8f, 0.0f)));
     list[i++] = new Sphere(Vec3(1.0f, 0.0f, -1.0f), 0.5f, new Metal(Color(0.8f, 0.6f, 0.2f), 0.3f));
-	  list[i++] = new Sphere(Vec3(-1.0f, 0.0f, -1.0f), 0.5f, new Metal(Color(0.8f, 0.8f, 0.8f), 0.5f));
+	list[i++] = new Sphere(Vec3(-1.0f, 0.0f, -1.0f), 0.5f, new Metal(Color(0.8f, 0.8f, 0.8f), 0.5f));
 
     Hitable *world = new HitableList(list, i);
 
@@ -43,6 +38,12 @@ int main()
         20,
         static_cast<float>(image.width()) / static_cast<float>(image.height())
     };
+
+	// RANDOM GENERATORS
+	std::random_device d;
+	std::mt19937 m{ d() };
+	auto max_rand_jitter = 1.0f - 1.0f / samples;
+	std::uniform_real_distribution<float> jitter(0.0f, max_rand_jitter);
 
     for (int idY=image.height() - 1; idY>=0; --idY)
     {
