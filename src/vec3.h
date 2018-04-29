@@ -13,15 +13,15 @@ private:
     std::array<float, 3> v;
 
 public:
-	static const Vec3 zero = {0.0f, 0.0f, 0.0f};
-	static const Vec3 one = {1.0f, 1.0f, 1.0f};
-	static const Vec3 X = {1.0f, 0.0f, 0.0f};
-	static const Vec3 Y = {0.0f, 1.0f, 0.0f};
-	static const Vec3 Z = {0.0f, 0.0f, 1.0f};
+    static const Vec3 X;
+    static const Vec3 Y;
+    static const Vec3 Z;
+    static const Vec3 ONE;
+    static const Vec3 ZERO;
 
 public:
-    Vec3(float x, float y, float z): v{x, y, z} {}
     Vec3(): v{0.0f, 0.0f, 0.0f} {}
+    constexpr Vec3(float x, float y, float z): v{x, y, z} {}
 
     float x() const { return v[0]; }
     float y() const { return v[1]; }
@@ -55,13 +55,11 @@ public:
 };
 
 
-inline void Vec3::normalize()
-{
-    float k = length();
-    v[0] /= k;
-    v[1] /= k;
-    v[2] /= k;
-}
+constexpr const Vec3 Vec3::X = { 1.0f, 0.0f, 0.0f };
+constexpr const Vec3 Vec3::Y = { 0.0f, 1.0f, 0.0f };
+constexpr const Vec3 Vec3::Z = { 0.0f, 0.0f, 1.0f };
+constexpr const Vec3 Vec3::ONE = { 1.0f, 1.0f, 1.0f };
+constexpr const Vec3 Vec3::ZERO = { 0.0f, 0.0f, 0.0f };
 
 
 inline std::ostream& operator<<(std::ostream &os, const Vec3 &t)
@@ -199,9 +197,19 @@ inline Vec3& Vec3::operator/=(const float t)
 }
 
 
+inline void Vec3::normalize()
+{
+    float k = length();
+    v[0] /= k;
+    v[1] /= k;
+    v[2] /= k;
+}
+
+
 inline Vec3 unit_vector(Vec3 v)
 {
-	return v / v.length();
+    return v / v.length();
 }
+
 
 #endif //RAYTRACING_VEC3_H
