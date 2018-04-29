@@ -20,7 +20,7 @@ int main()
 
     auto samples = 8;
 
-    Hitable *list[3];
+    Hitable *list[4];
 
     std::size_t i = 0;
     list[i++] = new Sphere(Vec3(0.0f, -1000.0f, 0.0f), 1000.0f - 0.1f, new Lambertian(Color(0.8f, 0.3f, 0.3f)));
