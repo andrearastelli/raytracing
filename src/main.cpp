@@ -24,8 +24,9 @@ int main()
 
     auto samples = 256;
 
-    Hitable *list[3];
     auto R = static_cast<float>(cos(M_PI / 4.0f));
+
+    Hitable *list[3];
 
     int i = 0;
     list[i++] = new Sphere(Vec3(0.0f, -1000.0f, 0.0f), 1000.0f - 0.5f);
@@ -38,7 +39,7 @@ int main()
     Camera cam{
         Vec3(-2.0f, 2.0f, 1.0f),
         Vec3(0.0f, 0.0f, -1.0f),
-        Vec3(0.0f, 1.0f, 0.0f),
+        Vec3::Y,
         20,
         static_cast<float>(image.width()) / static_cast<float>(image.height())
     };
@@ -49,6 +50,7 @@ int main()
     auto max_rand_jitter = 1.0f - 1.0f / samples;
     std::uniform_real_distribution<float> jitter(0.0f, max_rand_jitter);
 
+    // IMAGE PROCESSING
     for (int idY=image.height() - 1; idY>=0; --idY)
     {
         for (int idX=0; idX<image.width(); ++idX)
