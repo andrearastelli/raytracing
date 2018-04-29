@@ -1,3 +1,16 @@
+/**
+ * Camera definition.
+ *
+ * The camera class defines a very simple camera that has:
+ * - Position
+ * - Point to look at
+ * - Vertical FOV
+ * - Aspect ratio
+ *
+ * To properly orient in 3D space, the camera has to be given
+ * the UP vector.
+ */
+
 #ifndef RAYTRACING_CAMERA_H
 #define RAYTRACING_CAMERA_H
 
@@ -15,8 +28,37 @@ private:
     Vec3 vertical;
 
 public:
+    /**
+     * Simple constructor that defines a custom oriented camera
+     * using only vertical fov and aspect ratio.
+     *
+     * @param vfov Vertical FOV of the camera.
+     * @param aspect Aspect ratio of the camera.
+     */
     Camera(float vfov, float aspect);
+
+    /**
+     * Custom positionable camera with specific definition for
+     * looking at a specific point in space, from a specific point,
+     * with vertical FOV and aspect ratio.
+     *
+     * @param lookfrom Point defining the source position of the camera.
+     * @param lookat Point defining the lookat point for the camera.
+     * @param up Up vector to help define the orientation of the camera.
+     * @param vfov Vertical FOV.
+     * @param aspect Aspect ratio.
+     */
     Camera(Vec3 lookfrom, Vec3 lookat, Vec3 up, float vfov, float aspect);
+
+    /**
+     * Ray "emitted" from the camera into the world using the
+     * (U, V) coordinate of the frame.
+     *
+     * @param u U coordinate of the frame.
+     * @param v V coordinate of the frame.
+     *
+     * @return The Ray emitted from the camera into the world.
+     */
     Ray get_ray(float u, float v);
 };
 
