@@ -8,28 +8,25 @@
 #include "sphere.h"
 #include "hitablelist.h"
 #include "camera.h"
+#include "material.h"
 
-std::random_device d;
-std::mt19937 m{d()};
-std::uniform_real_distribution<float> dist(0.0f, 1.0f);
 
-Vec3 random_in_unit_sphere();
-
-Color ray_color(const Ray &r, Hitable *world);
+Color ray_color(const Ray &r, Hitable *world, int depth);
 
 
 int main()
 {
-    Image image("test_diffuse.ppm");
+    Image image("test_metal.ppm");
 
     auto samples = 8;
 
     Hitable *list[3];
 
-    int i = 0;
-    list[i++] = new Sphere(Vec3(0.0f, -1000.0f, 0.0f), 1000.0f - 0.1f);
-    list[i++] = new Sphere(Vec3(0.0f, 0.0f, -1.0f), 0.5f);
-    list[i++] = new Sphere(Vec3(1.0f, 0.0f, -1.0f), 0.5f);
+    std::size_t i = 0;
+    list[i++] = new Sphere(Vec3(0.0f, -1000.0f, 0.0f), 1000.0f - 0.1f, new Lambertian(Color(0.8f, 0.3f, 0.3f)));
+    list[i++] = new Sphere(Vec3(0.0f, 0.0f, -1.0f), 0.5f, new Lambertian(Color(0.8f, 0.8f, 0.0f)));
+    list[i++] = new Sphere(Vec3(1.0f, 0.0f, -1.0f), 0.5f, new Metal(Color(0.8f, 0.6f, 0.2f), 0.3f));
+	list[i++] = new Sphere(Vec3(-1.0f, 0.0f, -1.0f), 0.5f, new Metal(Color(0.8f, 0.8f, 0.8f), 0.5f));
 
     Hitable *world = new HitableList(list, i);
 
@@ -53,7 +50,7 @@ int main()
                 float v = (idY + jitter(m)) / static_cast<float>(image.height());
 
                 auto r = cam.get_ray(u, v);
-                col += ray_color(r, world);
+                col += ray_color(r, world, 0);
             }
 
             col /= static_cast<float>(samples);
@@ -66,28 +63,23 @@ int main()
 }
 
 
-Vec3 random_in_unit_sphere()
-{
-    Vec3 p;
-
-    do {
-
-        p = 2.0f * Vec3(dist(m), dist(m), dist(m)) - Vec3(1.0f, 1.0f, 1.0f);
-
-    } while(p.squared_length() >= 1.0f);
-
-    return p;
-}
-
-
-Color ray_color(const Ray &r, Hitable *world)
+Color ray_color(const Ray &r, Hitable *world, int depth)
 {
     HitRecord rec;
 
     if (world->hit(r, 0.001f, std::numeric_limits<float>::max(), rec))
     {
-        auto target = rec.p + rec.normal + random_in_unit_sphere();
-        return 0.5f * ray_color(Ray(rec.p, target - rec.p), world);
+		Ray scattered;
+		Color attenuation;
+
+		if (depth < 50 && rec.mat_ptr->scatter(r, rec, attenuation, scattered))
+		{
+			return attenuation * ray_color(scattered, world, depth + 1);
+		}
+		else
+		{
+			return Color(0, 0, 0);
+		}
     }
     else
     {
