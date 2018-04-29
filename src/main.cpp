@@ -22,7 +22,7 @@ int main()
 {
     Image image("test_camera.ppm");
 
-    auto samples = 256;
+    auto samples = 16;
 
     auto R = static_cast<float>(cos(M_PI / 4.0f));
 
