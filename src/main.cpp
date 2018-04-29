@@ -16,7 +16,13 @@ Color ray_color(const Ray &r, Hitable *world, int depth);
 
 int main()
 {
+<<<<<<< HEAD
     Image image("test_metal.ppm");
+=======
+    Image image("test_camera.ppm");
+
+    auto samples = 16;
+>>>>>>> Updated samples evaluation to 16, for testing purposes
 
     auto samples = 8;
     
