@@ -20,20 +20,28 @@ Color ray_color(const Ray &r, Hitable *world);
 
 int main()
 {
-    Image image("test_diffuse.ppm");
+    Image image("test_camera.ppm");
 
-    auto samples = 8;
+    auto samples = 256;
 
     Hitable *list[3];
+    auto R = static_cast<float>(cos(M_PI / 4.0f));
 
     int i = 0;
-    list[i++] = new Sphere(Vec3(0.0f, -1000.0f, 0.0f), 1000.0f - 0.1f);
-    list[i++] = new Sphere(Vec3(0.0f, 0.0f, -1.0f), 0.5f);
-    list[i++] = new Sphere(Vec3(1.0f, 0.0f, -1.0f), 0.5f);
+    list[i++] = new Sphere(Vec3(0.0f, -1000.0f, 0.0f), 1000.0f - 0.5f);
+    list[i++] = new Sphere(Vec3(-R, 0.0f, -1.0f), 0.5f);
+    list[i++] = new Sphere(Vec3(R, 0.0f, -1.0f), 0.5f);
 
     Hitable *world = new HitableList(list, i);
 
-    Camera cam;
+    // Camera cam(90, static_cast<float>(image.width()) / static_cast<float>(image.height()));
+    Camera cam{
+        Vec3(-2.0f, 2.0f, 1.0f),
+        Vec3(0.0f, 0.0f, -1.0f),
+        Vec3(0.0f, 1.0f, 0.0f),
+        20,
+        static_cast<float>(image.width()) / static_cast<float>(image.height())
+    };
 
     // RANDOM GENERATORS
     std::random_device d;
