@@ -35,13 +35,19 @@ int main()
 
     Hitable *world = new HitableList(list, i);
 
-    // Camera cam(90, static_cast<float>(image.width()) / static_cast<float>(image.height()));
+    auto lookfrom = Vec3{-2.0f, 2.0f, 1.0f};
+    auto lookat = Vec3{0.0f, 0.0f, -1.0f};
+    auto aperture = 2.0f;
+    auto focal_length = (Vec3(-2.0f, 2.0f, 1.0f) - Vec3(0.0f, 0.0f, -1.0f)).length();
+
     Camera cam{
-        Vec3(-2.0f, 2.0f, 1.0f),
-        Vec3(0.0f, 0.0f, -1.0f),
+        lookfrom,
+        lookat,
         Vec3::Y,
         20,
-        static_cast<float>(image.width()) / static_cast<float>(image.height())
+        static_cast<float>(image.width()) / static_cast<float>(image.height()),
+        aperture,
+        focal_length
     };
 
     // RANDOM GENERATORS
