@@ -10,11 +10,11 @@ class HitableList : public Hitable
 
 private:
     Hitable **list;
-    int list_size;
+    std::size_t list_size;
 
 public:
     HitableList() = default;
-    HitableList(Hitable **l, int size) : list{l}, list_size{size} {}
+    HitableList(Hitable **l, std::size_t size) : list{l}, list_size{size} {}
 
     virtual bool hit(const Ray &r, float tmin, float tmax, HitRecord &rec) const;
 
@@ -27,7 +27,7 @@ bool HitableList::hit(const Ray &r, float tmin, float tmax, HitRecord &rec) cons
     auto hit_anything = false;
     auto closest_so_far = tmax;
 
-    for (std::size_t idx=0; idx<list_size; ++idx)
+    for (std::size_t idx=0; idx < list_size; ++idx)
     {
         if (list[idx]->hit(r, tmin, closest_so_far, temp_rec))
         {

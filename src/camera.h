@@ -18,7 +18,6 @@ public:
     Camera(float vfov, float aspect);
     Camera(Vec3 lookfrom, Vec3 lookat, Vec3 up, float vfov, float aspect);
     Ray get_ray(float u, float v);
-
 };
 
 
