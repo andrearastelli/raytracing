@@ -153,7 +153,7 @@ Vec3 random_in_unit_disc()
     Vec3 p;
 
     do {
-        p = 2.0f * Vec3(drand48(), drand48(), drand48()) - Vec3(1.0f, 1.0f, 0.0f);
+        p = 2.0f * Vec3(dist(m), dist(m), dist(m)) - Vec3(1.0f, 1.0f, 0.0f);
     } while(dot(p, p) >= 1.0f);
 
     return p;
