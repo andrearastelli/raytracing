@@ -16,10 +16,10 @@ Color ray_color(const Ray &r, Hitable *world, int depth);
 
 int main()
 {
-    Image image("test_metal.ppm");
+    Image image("test_camera_defocus.ppm");
 
     auto samples = 8;
-
+    
     Hitable *list[4];
 
     std::size_t i = 0;
@@ -30,13 +30,19 @@ int main()
 
     Hitable *world = new HitableList(list, i);
 
-    // Camera cam(90, static_cast<float>(image.width()) / static_cast<float>(image.height()));
+    auto lookfrom = Vec3{-2.0f, 2.0f, 1.0f};
+    auto lookat = Vec3{0.0f, 0.0f, -1.0f};
+    auto aperture = 2.0f;
+    auto focal_length = (Vec3(-2.0f, 2.0f, 1.0f) - Vec3(0.0f, 0.0f, -1.0f)).length();
+
     Camera cam{
-        Vec3(-2.0f, 2.0f, 1.0f),
-        Vec3(0.0f, 0.0f, -1.0f),
-        Vec3(0.0f, 1.0f, 0.0f),
+        lookfrom,
+        lookat,
+        Vec3::Y,
         20,
-        static_cast<float>(image.width()) / static_cast<float>(image.height())
+        static_cast<float>(image.width()) / static_cast<float>(image.height()),
+        aperture,
+        focal_length
     };
 
 	// RANDOM GENERATORS
@@ -45,6 +51,7 @@ int main()
 	auto max_rand_jitter = 1.0f - 1.0f / samples;
 	std::uniform_real_distribution<float> jitter(0.0f, max_rand_jitter);
 
+    // IMAGE PROCESSING
     for (int idY=image.height() - 1; idY>=0; --idY)
     {
         for (int idX=0; idX<image.width(); ++idX)
