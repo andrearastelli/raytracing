@@ -10,10 +10,6 @@
 #include "ray.h"
 #include "hitable.h"
 
-std::random_device d;
-std::mt19937 m{ d() };
-std::uniform_real_distribution<float> dist(0.0f, 1.0f);
-
 
 /**
 *
