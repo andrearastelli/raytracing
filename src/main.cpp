@@ -9,16 +9,19 @@
 #include "hitablelist.h"
 #include "camera.h"
 #include "material.h"
+#include "parser.h"
 
 
 Color ray_color(const Ray &r, Hitable *world, int depth);
 
 
-int main()
+int main(int argc, char *argv[])
 {
-    Image image("test_camera_defocus.ppm");
+    auto input_data = parser(argc, argv);
 
-    auto samples = 8;
+    Image image(input_data.output_path, input_data.width, input_data.height);
+
+    auto samples = input_data.samples;
     
     Hitable *list[4];
 
@@ -39,7 +42,7 @@ int main()
         lookfrom,
         lookat,
         Vec3::Y,
-        20,
+        35,
         static_cast<float>(image.width()) / static_cast<float>(image.height()),
         aperture,
         focal_length
