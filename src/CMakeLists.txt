@@ -10,6 +10,7 @@ set(SRC
         hitablelist.h
         camera.h
         material.h
+        parser.h
 )
 
 add_executable(
