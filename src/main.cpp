@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 
     auto lookfrom = Vec3{0.0f, 1.5f, 1.0f};
     auto lookat = Vec3{0.0f, 0.0f, -1.0f};
-    auto aperture = 1.0f;
+    auto aperture = 0.0f;
     auto focal_length = (Vec3(-2.0f, 2.0f, 1.0f) - Vec3(0.0f, 0.0f, -1.0f)).length();
 
     Camera cam{
