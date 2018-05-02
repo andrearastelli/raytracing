@@ -27,15 +27,15 @@ int main(int argc, char *argv[])
 
     std::size_t i = 0;
     list[i++] = new Sphere(Vec3(0.0f, -1000.0f, 0.0f), 1000.0f - 0.1f, new Lambertian(Color(0.8f, 0.3f, 0.3f)));
-    list[i++] = new Sphere(Vec3(0.0f, 0.0f, -1.0f), 0.5f, new Lambertian(Color(0.8f, 0.8f, 0.0f)));
+    list[i++] = new Sphere(Vec3(0.0f, 0.0f, -1.0f), 0.5f, new Lambertian(Color(0.1f, 0.2f, 0.5f)));
     list[i++] = new Sphere(Vec3(1.0f, 0.0f, -1.0f), 0.5f, new Metal(Color(0.8f, 0.6f, 0.2f), 0.3f));
-	list[i++] = new Sphere(Vec3(-1.0f, 0.0f, -1.0f), 0.5f, new Metal(Color(0.8f, 0.8f, 0.8f), 0.5f));
+    list[i++] = new Sphere(Vec3(-1.0f, 0.0f, -1.0f), 0.5f, new Dielectric(1.5f));
 
     Hitable *world = new HitableList(list, i);
 
-    auto lookfrom = Vec3{-2.0f, 2.0f, 1.0f};
+    auto lookfrom = Vec3{0.0f, 1.5f, 1.0f};
     auto lookat = Vec3{0.0f, 0.0f, -1.0f};
-    auto aperture = 2.0f;
+    auto aperture = 1.0f;
     auto focal_length = (Vec3(-2.0f, 2.0f, 1.0f) - Vec3(0.0f, 0.0f, -1.0f)).length();
 
     Camera cam{
