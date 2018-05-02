@@ -9,16 +9,19 @@
 #include "hitablelist.h"
 #include "camera.h"
 #include "material.h"
+#include "parser.h"
 
 
 Color ray_color(const Ray &r, Hitable *world, int depth);
 
 
-int main()
+int main(int argc, char *argv[])
 {
-    Image image("test_dielectrics.ppm");
+    auto input_data = parser(argc, argv);
 
-    auto samples = 8;
+    Image image(input_data.output_path, input_data.width, input_data.height);
+
+    auto samples = input_data.samples;
     
     Hitable *list[4];
 
@@ -26,7 +29,7 @@ int main()
     list[i++] = new Sphere(Vec3(0.0f, -1000.0f, 0.0f), 1000.0f - 0.1f, new Lambertian(Color(0.8f, 0.3f, 0.3f)));
     list[i++] = new Sphere(Vec3(0.0f, 0.0f, -1.0f), 0.5f, new Lambertian(Color(0.1f, 0.2f, 0.5f)));
     list[i++] = new Sphere(Vec3(1.0f, 0.0f, -1.0f), 0.5f, new Metal(Color(0.8f, 0.6f, 0.2f), 0.3f));
-	list[i++] = new Sphere(Vec3(-1.0f, 0.0f, -1.0f), 0.5f, new Dielectric(1.5f));
+    list[i++] = new Sphere(Vec3(-1.0f, 0.0f, -1.0f), 0.5f, new Dielectric(1.5f));
 
     Hitable *world = new HitableList(list, i);
 
@@ -39,7 +42,7 @@ int main()
         lookfrom,
         lookat,
         Vec3::Y,
-        20,
+        35,
         static_cast<float>(image.width()) / static_cast<float>(image.height()),
         aperture,
         focal_length
