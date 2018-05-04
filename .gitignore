@@ -2,5 +2,8 @@
 
 build/
 bin/
+.idea/
 
 *.ppm
+
+.DS_Store
