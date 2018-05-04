@@ -27,14 +27,9 @@ int main(int argc, char *argv[])
     Image image(input_data.output_path, input_data.width, input_data.height);
 
     auto samples = input_data.samples;
-<<<<<<< HEAD
-    Hitable *world = random_scene();
-
-=======
 
     Hitable *world = random_scene();
 
->>>>>>> Random scene generation
     auto lookfrom = Vec3{4.0f, 1.5f, 4.0f};
     auto lookat = Vec3{0.0f, 0.0f, -1.0f};
     auto aperture = 0.0f;
@@ -139,16 +134,11 @@ Hitable *random_scene()
             {
                 if (choose_mat < 0.8f)
                 {
-<<<<<<< HEAD
                     list[i++] = new MovingSphere(
                             center,
                             center + Vec3(0.0f, 0.5f * dist(m), 0.0f),
                             0.0f, // Time 0
                             1.0f, // Time 1
-=======
-                    list[i++] = new Sphere(
-                            center,
->>>>>>> Random scene generation
                             0.2f,
                             new Lambertian(
                                 new ConstantTexture(Color(dist(m) * dist(m), dist(m) * dist(m), dist(m) * dist(m)))
@@ -159,12 +149,6 @@ Hitable *random_scene()
                 {
                     list[i++] = new Sphere(
                             center,
-<<<<<<< HEAD
-                            // center + Vec3(0.0f, 0.5f * dist(m), 0.0f),
-                            // 0.0f,
-                            // 0.1f,
-=======
->>>>>>> Random scene generation
                             0.2f,
                             new Metal(
                                     {0.5f * (1 + dist(m)), 0.5f * (1 + dist(m)), 0.5f * (1 + dist(m))},
@@ -176,12 +160,6 @@ Hitable *random_scene()
                 {
                     list[i++] = new Sphere(
                             center,
-<<<<<<< HEAD
-                            // center + Vec3(0.0f, 0.5f * dist(m), 0.0f),
-                            // 0.0f,
-                            // 0.1f,
-=======
->>>>>>> Random scene generation
                             0.2f,
                             new Dielectric(1.5f)
                     );
@@ -196,8 +174,3 @@ Hitable *random_scene()
 
     return new HitableList(list, i);
 }
-
-<<<<<<< HEAD
-=======
-
->>>>>>> Random scene generation
