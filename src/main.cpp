@@ -6,6 +6,7 @@
 #include "vec3.h"
 #include "ray.h"
 #include "sphere.h"
+#include "movingsphere.h"
 #include "hitablelist.h"
 #include "camera.h"
 #include "material.h"
@@ -40,7 +41,9 @@ int main(int argc, char *argv[])
         50,
         static_cast<float>(image.width()) / static_cast<float>(image.height()),
         aperture,
-        focal_length
+        focal_length,
+        0.0f,
+        1.0f
     };
 
 	// RANDOM GENERATORS
@@ -126,8 +129,11 @@ Hitable *random_scene()
             {
                 if (choose_mat < 0.8f)
                 {
-                    list[i++] = new Sphere(
+                    list[i++] = new MovingSphere(
                             center,
+                            center + Vec3(0.0f, 0.5f * dist(m), 0.0f),
+                            0.0f, // Time 0
+                            1.0f, // Time 1
                             0.2f,
                             new Lambertian(
                                     {dist(m) * dist(m), dist(m) * dist(m), dist(m) * dist(m)}
@@ -138,6 +144,9 @@ Hitable *random_scene()
                 {
                     list[i++] = new Sphere(
                             center,
+                            // center + Vec3(0.0f, 0.5f * dist(m), 0.0f),
+                            // 0.0f,
+                            // 0.1f,
                             0.2f,
                             new Metal(
                                     {0.5f * (1 + dist(m)), 0.5f * (1 + dist(m)), 0.5f * (1 + dist(m))},
@@ -149,6 +158,9 @@ Hitable *random_scene()
                 {
                     list[i++] = new Sphere(
                             center,
+                            // center + Vec3(0.0f, 0.5f * dist(m), 0.0f),
+                            // 0.0f,
+                            // 0.1f,
                             0.2f,
                             new Dielectric(1.5f)
                     );
