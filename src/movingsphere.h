@@ -44,6 +44,7 @@ public:
      */
     virtual bool hit(const Ray &r, float tmin, float tmax, HitRecord &rec) const;
 
+<<<<<<< HEAD
 
     /**
      *
@@ -54,6 +55,8 @@ public:
      */
     virtual bool bounding_box(float t0, float t1, AABB &box) const;
 
+=======
+>>>>>>> Moving Sphere object
     /**
      *
      * @param time
@@ -108,6 +111,7 @@ bool MovingSphere::hit(const Ray &r, float tmin, float tmax, HitRecord &rec) con
 }
 
 
+<<<<<<< HEAD
 bool MovingSphere::bounding_box(float t0, float t1, AABB &box) const
 {
     auto box0 = center0 - Vec3{radius, radius, radius};
@@ -119,4 +123,6 @@ bool MovingSphere::bounding_box(float t0, float t1, AABB &box) const
 }
 
 
+=======
+>>>>>>> Moving Sphere object
 #endif //RAYTRACING_MOVINGSPHERE_H
