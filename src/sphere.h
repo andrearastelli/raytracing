@@ -19,11 +19,7 @@ public:
     Sphere(Vec3 center, float radius, Material *mat) : center{ center }, radius{ radius }, mat_ptr{ mat } {}
 
     virtual bool hit(const Ray &r, float tmin, float tmax, HitRecord &rec) const;
-<<<<<<< HEAD
-    virtual bool bounding_box(float t0, float t1, AABB &box) const;
-=======
 	virtual bool bounding_box(float t0, float t1, AABB &box) const;
->>>>>>> Extended hit and bounding_box methods
 
 };
 

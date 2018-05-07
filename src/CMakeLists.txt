@@ -15,6 +15,8 @@ set(SRC
         aabb.h
         bvhnode.h
         texture.h
+        perlin.h
+        noisetexture.h
 )
 
 add_executable(
