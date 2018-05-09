@@ -11,6 +11,7 @@ set(SRC
         camera.h
         material.h
         parser.h
+        movingsphere.h
 )
 
 add_executable(
