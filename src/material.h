@@ -56,7 +56,8 @@ float schlick(float cosine, float ref_idx)
 {
     float r0 = (1 - ref_idx) / (1 + ref_idx);
     r0 = r0 * r0;
-    return r0 + (1 - r0)*pow((1 - cosine), 5);
+    
+    return r0 + (1 - r0) * static_cast<float>(std::pow((1 - cosine), 5));
 }
 
 
@@ -88,7 +89,7 @@ public:
 	virtual bool scatter(const Ray& ray_in, const HitRecord& hit, Color& attenuation, Ray& scattered) const
 	{
 		Vec3 target = hit.p + hit.normal + random_in_unit_sphere();
-		scattered = Ray(hit.p, target - hit.p);
+		scattered = Ray(hit.p, target - hit.p, ray_in.time());
 		attenuation = albedo;
 
 		return true;
@@ -107,8 +108,7 @@ public:
 	virtual bool scatter(const Ray& ray_in, const HitRecord& hit, Color& attenuation, Ray& scattered) const
 	{
 		Vec3 reflected = reflect(unit_vector(ray_in.direction()), hit.normal);
-		scattered = Ray(hit.p, reflected + fuzziness * random_in_unit_sphere());
-		
+		scattered = Ray(hit.p, reflected + fuzziness * random_in_unit_sphere(), ray_in.time());
 		attenuation = albedo;
 
 		return (dot(scattered.direction(), hit.normal) > 0);
@@ -153,9 +153,9 @@ public:
             reflect_prob = 1.0;
 
         if (dist(m) < reflect_prob)
-            scattered = Ray(hit.p, reflected);
+            scattered = Ray(hit.p, reflected, r_in.time());
         else
-            scattered = Ray(hit.p, refracted);
+            scattered = Ray(hit.p, refracted, r_in.time());
 
         return true;
     }

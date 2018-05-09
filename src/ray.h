@@ -25,14 +25,16 @@ class Ray
 private:
     Vec3 a;
     Vec3 b;
+    float t;
 
 public:
     Ray() = default;
-    Ray(const Vec3 &a, const Vec3 &b): a{a}, b{b} {}
+    Ray(const Vec3 &a, const Vec3 &b, float t = 0.0f): a{a}, b{b}, t{t} {}
     ~Ray() = default;
 
     Vec3 origin() const { return a; }
     Vec3 direction() const { return b; }
+    float time() const { return t; }
     Vec3 point_at_parameter(float t) const { return a + t * b; }
 
 };
