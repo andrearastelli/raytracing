@@ -56,6 +56,7 @@ float schlick(float cosine, float ref_idx)
 {
     float r0 = (1 - ref_idx) / (1 + ref_idx);
     r0 = r0 * r0;
+    
     return r0 + (1 - r0) * static_cast<float>(std::pow((1 - cosine), 5));
 }
 
@@ -108,7 +109,6 @@ public:
 	{
 		Vec3 reflected = reflect(unit_vector(ray_in.direction()), hit.normal);
 		scattered = Ray(hit.p, reflected + fuzziness * random_in_unit_sphere(), ray_in.time());
-		
 		attenuation = albedo;
 
 		return (dot(scattered.direction(), hit.normal) > 0);

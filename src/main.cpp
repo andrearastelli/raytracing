@@ -176,4 +176,3 @@ Hitable *random_scene()
     return new HitableList(list, i);
 }
 
-
