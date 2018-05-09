@@ -26,7 +26,6 @@ int main(int argc, char *argv[])
     Image image(input_data.output_path, input_data.width, input_data.height);
 
     auto samples = input_data.samples;
-
     Hitable *world = random_scene();
 
     auto lookfrom = Vec3{4.0f, 1.5f, 4.0f};
