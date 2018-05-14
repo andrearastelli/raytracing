@@ -12,14 +12,14 @@ class Sphere : public Hitable
 private:
     Vec3 center;
     float radius;
-	Material *mat_ptr;
+    Material *mat_ptr;
 
 public:
     Sphere() = default;
-	Sphere(Vec3 center, float radius, Material *mat) : center{ center }, radius{ radius }, mat_ptr{ mat } {}
+    Sphere(Vec3 center, float radius, Material *mat) : center{ center }, radius{ radius }, mat_ptr{ mat } {}
 
     virtual bool hit(const Ray &r, float tmin, float tmax, HitRecord &rec) const;
-	virtual bool bounding_box(float t0, float t1, AABB &box) const;
+    virtual bool bounding_box(float t0, float t1, AABB &box) const;
 
 };
 
@@ -41,7 +41,7 @@ bool Sphere::hit(const Ray &r, float tmin, float tmax, HitRecord &rec) const
             rec.t = temp;
             rec.p = r.point_at_parameter(rec.t);
             rec.normal = (rec.p - center) / radius;
-			rec.mat_ptr = mat_ptr;
+            rec.mat_ptr = mat_ptr;
 
             return true;
         }
@@ -53,7 +53,7 @@ bool Sphere::hit(const Ray &r, float tmin, float tmax, HitRecord &rec) const
             rec.t = temp;
             rec.p = r.point_at_parameter(rec.t);
             rec.normal = (rec.p - center) / radius;
-			rec.mat_ptr = mat_ptr;
+            rec.mat_ptr = mat_ptr;
 
             return true;
         }
