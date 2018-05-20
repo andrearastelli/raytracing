@@ -12,6 +12,7 @@ set(SRC
         material.h
         parser.h
         movingsphere.h
+        texture.h
 )
 
 add_executable(

@@ -11,6 +11,7 @@
 #include "camera.h"
 #include "material.h"
 #include "parser.h"
+#include "texture.h"
 
 
 Color ray_color(const Ray &r, Hitable *world, int depth);
@@ -112,7 +113,11 @@ Hitable *random_scene()
     list[0] = new Sphere(
             {0.0f, -1000.0f, 0.0f},
             1000,
-            new Lambertian({0.3f, 0.3f, 0.3f})
+            new Lambertian(new CheckerTexture(
+				new ConstantTexture(Color(0.2f, 0.3f, 0.1f)),
+				new ConstantTexture(Color(0.9f, 0.9f, 0.9f))
+				)
+			)
     );
 
     std::size_t i = 1;
@@ -135,7 +140,7 @@ Hitable *random_scene()
                             1.0f, // Time 1
                             0.2f,
                             new Lambertian(
-                                    {dist(m) * dist(m), dist(m) * dist(m), dist(m) * dist(m)}
+                                new ConstantTexture(Color(dist(m) * dist(m), dist(m) * dist(m), dist(m) * dist(m)))
                             )
                     );
                 }
@@ -169,7 +174,7 @@ Hitable *random_scene()
     }
 
     list[i++] = new Sphere({0.0f, 1.0f, 0.0f}, 1.0f, new Dielectric(1.5));
-    list[i++] = new Sphere({-4.0f, 1.0f, 0.0f}, 1.0f, new Lambertian({0.4f, 0.2f, 0.1f}));
+    list[i++] = new Sphere({-4.0f, 1.0f, 0.0f}, 1.0f, new Lambertian(new ConstantTexture(Color(0.4f, 0.2f, 0.1f))));
     list[i++] = new Sphere({4.0f, 1.0f, 0.0f}, 1.0f, new Metal({0.7f, 0.6f, 0.5f}, 0.0f));
 
     return new HitableList(list, i);
