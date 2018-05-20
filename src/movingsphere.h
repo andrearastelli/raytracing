@@ -44,6 +44,16 @@ public:
      */
     virtual bool hit(const Ray &r, float tmin, float tmax, HitRecord &rec) const;
 
+
+    /**
+     *
+     * @param t0
+     * @param t1
+     * @param box
+     * @return
+     */
+    virtual bool bounding_box(float t0, float t1, AABB &box) const;
+
     /**
      *
      * @param time
@@ -95,6 +105,17 @@ bool MovingSphere::hit(const Ray &r, float tmin, float tmax, HitRecord &rec) con
     }
 
     return false;
+}
+
+
+bool MovingSphere::bounding_box(float t0, float t1, AABB &box) const
+{
+    auto box0 = center0 - Vec3{radius, radius, radius};
+    auto box1 = center1 - Vec3{radius, radius, radius};
+
+    box = AABB(box0, box1);
+
+    return true;
 }
 
 

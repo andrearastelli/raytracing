@@ -12,6 +12,8 @@ set(SRC
         material.h
         parser.h
         movingsphere.h
+        aabb.h
+        bvhnode.h
 )
 
 add_executable(
