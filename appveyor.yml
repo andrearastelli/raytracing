@@ -17,4 +17,4 @@ build:
   verbosity: normal
 
 test_script:
-  - .\bin\%CONFIGURATION%\raytracing.exe
+  - .\bin\%CONFIGURATION%\raytracing.exe --samples=1 --width=2 --height=1
