@@ -14,6 +14,7 @@ set(SRC
         movingsphere.h
         aabb.h
         bvhnode.h
+        texture.h
 )
 
 add_executable(

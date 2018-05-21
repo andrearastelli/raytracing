@@ -9,6 +9,7 @@
 
 #include "ray.h"
 #include "hitable.h"
+#include "texture.h"
 
 
 /**
@@ -82,15 +83,15 @@ Vec3 random_in_unit_sphere()
 class Lambertian : public Material
 {
 public:
-	Lambertian(const Color& a) : albedo(a) {};
+	Lambertian(Texture *a) : albedo(a) {};
 
-	Color albedo;
+	Texture *albedo;
 
 	virtual bool scatter(const Ray& ray_in, const HitRecord& hit, Color& attenuation, Ray& scattered) const
 	{
 		Vec3 target = hit.p + hit.normal + random_in_unit_sphere();
 		scattered = Ray(hit.p, target - hit.p, ray_in.time());
-		attenuation = albedo;
+		attenuation = albedo->value(0, 0, hit.p);
 
 		return true;
 	}
