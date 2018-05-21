@@ -15,4 +15,4 @@ script:
   - cd build
   - cmake --build .
   - cd ..
-  - ./bin/raytracing
+  - ./bin/raytracing --samples=1 --width=2 --height=1
