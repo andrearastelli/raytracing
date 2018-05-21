@@ -110,7 +110,6 @@ public:
 	{
 		Vec3 reflected = reflect(unit_vector(ray_in.direction()), hit.normal);
 		scattered = Ray(hit.p, reflected + fuzziness * random_in_unit_sphere(), ray_in.time());
-
 		attenuation = albedo;
 
 		return (dot(scattered.direction(), hit.normal) > 0);

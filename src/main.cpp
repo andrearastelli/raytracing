@@ -149,6 +149,9 @@ Hitable *random_scene()
                 {
                     list[i++] = new Sphere(
                             center,
+                            // center + Vec3(0.0f, 0.5f * dist(m), 0.0f),
+                            // 0.0f,
+                            // 0.1f,
                             0.2f,
                             new Metal(
                                     {0.5f * (1 + dist(m)), 0.5f * (1 + dist(m)), 0.5f * (1 + dist(m))},
@@ -160,6 +163,9 @@ Hitable *random_scene()
                 {
                     list[i++] = new Sphere(
                             center,
+                            // center + Vec3(0.0f, 0.5f * dist(m), 0.0f),
+                            // 0.0f,
+                            // 0.1f,
                             0.2f,
                             new Dielectric(1.5f)
                     );
