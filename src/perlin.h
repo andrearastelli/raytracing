@@ -13,7 +13,8 @@ private:
     static int *perm_x;
     static int *perm_y;
     static int *perm_z;
-    static float *ranfloat;
+    // static float *ranfloat;
+    static Vec3 *ranvec;
 
 public:
 
@@ -59,6 +60,36 @@ inline float trilinear_interpolation(float c[2][2][2], float u, float v, float w
 }
 
 
+/**
+ *
+ * @param c
+ * @param u
+ * @param v
+ * @param w
+ * @return
+ */
+inline float perlin_interp(Vec3 c[2][2][2], float u, float v, float w)
+{
+    auto uu = u * u * (3 - 2 * u);
+    auto vv = v * v * (3 - 2 * v);
+    auto ww = w * w * (3 - 2 * w);
+    auto accum = 0.0f;
+
+    for (auto i=0; i<2; ++i)
+        for (auto j=0; j<2; ++j)
+            for (auto k=0; k<2; ++k)
+            {
+                auto weight = Vec3(u-i, v-j, w-k);
+                accum += (i * uu + (1 - i) * (1 - uu)) *
+                         (j * vv + (1 - j) * (1 - vv)) *
+                         (k * ww + (1 - k) * (1 - ww)) *
+                         dot(c[i][j][k], weight);
+            }
+
+    return accum;
+}
+
+
 /*
 float Perlin::noise(const Vec3 &p) const
 {
@@ -90,14 +121,14 @@ float Perlin::noise(const Vec3 &p) const
     auto j = static_cast<int>(std::floor(p.y()));
     auto k = static_cast<int>(std::floor(p.z()));
 
-    float c[2][2][2];
+    Vec3 c[2][2][2];
 
     for (auto di=0; di<2; ++di)
         for (auto dj=0; dj<2; ++dj)
             for (auto dk=0; dk<2; ++dk)
-                c[di][dj][dk] = ranfloat[perm_x[(i + di) & 255] ^ perm_y[(j + dj) & 255] ^ perm_z[(k + dk) & 255]];
+                c[di][dj][dk] = ranvec[perm_x[(i + di) & 255] ^ perm_y[(j + dj) & 255] ^ perm_z[(k + dk) & 255]];
 
-    return trilinear_interpolation(c, u, v, w);
+    return perlin_interp(c, u, v, w);
 }
 
 
@@ -106,12 +137,25 @@ float Perlin::noise(const Vec3 &p) const
  *
  * @return The float[256] array of random [0, 1] values.
  */
-static float* perlin_generate()
+//static float* perlin_generate()
+//{
+//    auto *p = new float[256];
+//    for (auto i=0; i<256; ++i)
+//    {
+//        p[i] = dist(m);
+//    }
+//
+//    return p;
+//}
+
+
+static Vec3* perlin_generate()
 {
-    auto *p = new float[256];
+    auto *p = new Vec3[256];
+
     for (auto i=0; i<256; ++i)
     {
-        p[i] = dist(m);
+        p[i] = unit_vector(Vec3(-1.0f + 2.0f * dist(m), -1.0f + 2.0f * dist(m), -1.0f + 2.0f * dist(m)));
     }
 
     return p;
@@ -154,7 +198,7 @@ static int* perlin_generate_perm()
 }
 
 
-float *Perlin::ranfloat = perlin_generate();
+Vec3 *Perlin::ranvec = perlin_generate();
 int *Perlin::perm_x = perlin_generate_perm();
 int *Perlin::perm_y = perlin_generate_perm();
 int *Perlin::perm_z = perlin_generate_perm();

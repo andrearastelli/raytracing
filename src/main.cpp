@@ -18,6 +18,7 @@ Color ray_color(const Ray &r, Hitable *world, int depth);
 
 
 Hitable *random_scene();
+Hitable *test_perlin();
 
 
 int main(int argc, char *argv[])
@@ -28,10 +29,11 @@ int main(int argc, char *argv[])
 
     auto samples = input_data.samples;
 
-    Hitable *world = random_scene();
+    //Hitable *world = random_scene();
+    Hitable *world = test_perlin();
 
-    auto lookfrom = Vec3{4.0f, 1.5f, 4.0f};
-    auto lookat = Vec3{0.0f, 0.0f, -1.0f};
+    auto lookfrom = Vec3{10.0f, 0.0f, 0.0f};
+    auto lookat = Vec3{0.0f, 0.0f, 0.0f};
     auto aperture = 0.0f;
     auto focal_length = (Vec3(-2.0f, 2.0f, 1.0f) - Vec3(0.0f, 0.0f, -1.0f)).length();
 
@@ -39,7 +41,7 @@ int main(int argc, char *argv[])
         lookfrom,
         lookat,
         Vec3::Y,
-        50,
+        35,
         static_cast<float>(image.width()) / static_cast<float>(image.height()),
         aperture,
         focal_length,
@@ -179,4 +181,15 @@ Hitable *random_scene()
     list[i++] = new Sphere({4.0f, 1.0f, 0.0f}, 1.0f, new Metal({0.7f, 0.6f, 0.5f}, 0.0f));
 
     return new HitableList(list, i);
+}
+
+
+Hitable *test_perlin()
+{
+    auto **list = new Hitable*[2];
+
+    list[0] = new Sphere({0.0f, 20.0f, 0.0f}, 20.0f, new Lambertian{new NoiseTexture(2.0f)});
+    list[1] = new Sphere({0.0f, -20.0f, 0.0f}, 20.0f, new Lambertian{new NoiseTexture(5.0f)});
+
+    return new HitableList(list, 2);
 }
