@@ -44,7 +44,7 @@ public:
  *
  * @return
  */
-inline float trilinear_interpolation(float c[2][2][2], float u, float v, float w)
+float trilinear_interpolation(float c[2][2][2], float u, float v, float w)
 {
     auto accum = 0.0f;
 
@@ -68,11 +68,12 @@ inline float trilinear_interpolation(float c[2][2][2], float u, float v, float w
  * @param w
  * @return
  */
-inline float perlin_interp(Vec3 c[2][2][2], float u, float v, float w)
+float perlin_interp(Vec3 c[2][2][2], float u, float v, float w)
 {
     auto uu = u * u * (3 - 2 * u);
     auto vv = v * v * (3 - 2 * v);
     auto ww = w * w * (3 - 2 * w);
+
     auto accum = 0.0f;
 
     for (auto i=0; i<2; ++i)
@@ -80,6 +81,7 @@ inline float perlin_interp(Vec3 c[2][2][2], float u, float v, float w)
             for (auto k=0; k<2; ++k)
             {
                 auto weight = Vec3(u-i, v-j, w-k);
+
                 accum += (i * uu + (1 - i) * (1 - uu)) *
                          (j * vv + (1 - j) * (1 - vv)) *
                          (k * ww + (1 - k) * (1 - ww)) *
@@ -111,11 +113,6 @@ float Perlin::noise(const Vec3 &p) const
     auto u = p.x() - std::floor(p.x());
     auto v = p.y() - std::floor(p.y());
     auto w = p.z() - std::floor(p.z());
-
-    // Hermite cubic - smooth the interpolation artifacts.
-    u = u * u * (3 - 2 * u);
-    v = v * v * (3 - 2 * v);
-    w = w * w * (3 - 2 * w);
 
     auto i = static_cast<int>(std::floor(p.x()));
     auto j = static_cast<int>(std::floor(p.y()));
