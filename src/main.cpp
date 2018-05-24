@@ -188,8 +188,8 @@ Hitable *test_perlin()
 {
     auto **list = new Hitable*[2];
 
-    list[0] = new Sphere({0.0f, 20.0f, 0.0f}, 20.0f, new Lambertian{new NoiseTexture(2.0f)});
-    list[1] = new Sphere({0.0f, -20.0f, 0.0f}, 20.0f, new Lambertian{new NoiseTexture(5.0f)});
+    list[0] = new Sphere({0.0f, 20.0f, 0.0f}, 20.0f, new Lambertian{new NoiseTexture(1.0f)});
+    list[1] = new Sphere({0.0f, -20.0f, 0.0f}, 20.0f, new Lambertian{new NoiseTexture(1.0f)});
 
     return new HitableList(list, 2);
 }
