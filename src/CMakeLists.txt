@@ -14,8 +14,9 @@ set(SRC
         movingsphere.h
         aabb.h
         bvhnode.h
+        perlin.h
         texture.h
-)
+        )
 
 add_executable(
         ${TARGET_NAME}

@@ -54,6 +54,7 @@ public:
      */
     virtual bool bounding_box(float t0, float t1, AABB &box) const;
 
+
     /**
      *
      * @param time

@@ -3,6 +3,7 @@
 
 #include "vec3.h"
 #include "color.h"
+#include "perlin.h"
 
 
 class Texture 
@@ -82,6 +83,49 @@ Color ImageTexture::value(float u, float v, const Vec3& p) const
     float b = int(data[3 * i + 3 * nx * j + 2]) / 255.0f;
 
     return Color(r, g, b);
+}
+
+
+/**
+ *
+ * NOISE TEXTURE
+ *
+ */
+class NoiseTexture : public Texture
+{
+
+private:
+    Perlin noise;
+    float scale = 1.0f;
+
+public:
+    NoiseTexture() = default;
+
+    /**
+     * Constructor with scale value for the noise.
+     *
+     * @param sc Scale value
+     */
+    NoiseTexture(float sc) : scale(sc) {}
+
+    /**
+     * Evaluate the noise function (Perlin noise) at the given point,
+     * in the given u,v coordinate.
+     *
+     * @param u The U coordinate in UV space.
+     * @param v The V coordinate in UV space.
+     * @param p The point in space to use for evaluating the noise value.
+     *
+     * @return The resulting Color, per point, of the Noise function.
+     */
+    virtual Color value(float u, float v, const Vec3 &p) const;
+
+};
+
+
+Color NoiseTexture::value(float u, float v, const Vec3 &p) const
+{
+    return Color(1.0f, 1.0f, 1.0f) * noise.noise(scale * p);
 }
 
 #endif
