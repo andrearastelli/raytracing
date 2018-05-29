@@ -101,7 +101,7 @@ public:
      * Rotation Constructor.
      * Evaluate the rotation in terms of sin and cos for the specified angle.
      * Also evaluate the new BBOX for the rotated object.
-     * 
+     *
      * @param p
      * @param angle
      */
