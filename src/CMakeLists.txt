@@ -16,6 +16,7 @@ set(SRC
         bvhnode.h
         perlin.h
         texture.h
+        rect.h
         )
 
 add_executable(
