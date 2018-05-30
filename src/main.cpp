@@ -190,7 +190,7 @@ Hitable *test_perlin()
     auto **list = new Hitable*[2];
   
     list[0] = new Sphere({0.0f, 20.0f, 0.0f}, 20.0f, new Lambertian{new NoiseTexture(1.0f)});
-    list[1] = new XY_Rect(3, 5, 1, 3, -2, new Lambertian(new ConstantTexture(Color(1.0f, 0.0f, 0.0f)))    
+    list[1] = new XY_Rect(3, 5, 1, 3, -2, new Lambertian(new ConstantTexture(Color(1.0f, 0.0f, 0.0f))));
 
     return new HitableList(list, 2);
 }
