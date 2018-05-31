@@ -5,6 +5,8 @@
 #include "aabb.h"
 #include "ray.h"
 
+#include <cfloat>
+
 
 class Material;
 
@@ -120,8 +122,6 @@ RotateY::RotateY(Hitable *p, float angle) : ptr(p)
     sin_theta = std::sin(radians);
     cos_theta = std::cos(radians);
     hasbox = ptr->bounding_box(0, 1, bbox);
-
-    float FLT_MAX = std::numeric_limits<float>::max();
 
     auto min = Vec3(FLT_MAX, FLT_MAX, FLT_MAX);
     auto max = Vec3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
