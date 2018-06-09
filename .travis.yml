@@ -15,4 +15,5 @@ script:
   - cd build
   - cmake --build .
   - cd ..
-  - ./bin/raytracing
+  - cp ./src/sample_texture.jpg .
+  - ./bin/raytracing --samples=1 --width=2 --height=1
