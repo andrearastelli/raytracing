@@ -220,18 +220,29 @@ Hitable *simple_light()
 
 Hitable *cornell_box()
 {
-    Hitable **list = new Hitable*[8];
+    Hitable **list = new Hitable*[7];
     int i = 0;
 
-    Material *red = new Lambertian(new ConstantTexture(Color(0.95f, 0.05f, 0.05f)));
-    Material *white = new Lambertian(new ConstantTexture(Color(0.73f, 0.73f, 0.73f)));
-    Material *green = new Lambertian(new ConstantTexture(Color(0.05f, 0.95f, 0.05f)));
+    auto c_red = Color(1.0f, 0.0f, 0.0f);
+    auto c_green = Color(0.0f, 1.0f, 0.0f);
+    auto c_white = Color(0.8f, 0.8f, 0.8f);
+    auto c_yellow = Color(1.0f, 1.0f, 0.0f);
+
+    std::cout << c_green << std::endl;
+
+    Material *red = new Lambertian(new ConstantTexture(c_red));
+    Material *white = new Lambertian(new ConstantTexture(c_white));
+    Material *green = new Lambertian(new ConstantTexture(c_green));
+    Material *yellow = new Lambertian(new ConstantTexture(c_yellow));
 
     Material *light = new DiffuseLight(new ConstantTexture(Color(150, 150, 150)));
 
     list[i++] = new FlipNormals(new YZ_Rect(0, 555, 0, 555, 555, green));
-    //list[i++] = new RotateY(new YZ_Rect(0, 555, 0, 555, 555, green), 90.0f);
     list[i++] = new YZ_Rect(0, 555, 0, 555, 0, red);
+    std::cout << i << std::endl;
+
+    //list[i++] = new RotateY(new YZ_Rect(0, 555, 0, 555, 555, green), 90.0f);
+
     //list[i++] = new XZ_Rect(213, 343, 227, 332, 554, light);
     list[i++] = new XZ_Rect(50, 505, 50, 505, 554, light);
     list[i++] = new FlipNormals(new XZ_Rect(0, 555, 0, 555, 555, white));

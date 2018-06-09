@@ -97,7 +97,7 @@ Color& Color::gamma()
     //c[1] = std::sqrt(c[1]);
     //c[2] = std::sqrt(c[2]);
     c[0] = std::pow(c[0], 0.45454545f);
-    c[1] = std::pow(c[2], 0.45454545f);
+    c[1] = std::pow(c[1], 0.45454545f);
     c[2] = std::pow(c[2], 0.45454545f);
 
     return *this;
