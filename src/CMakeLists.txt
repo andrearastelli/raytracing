@@ -18,6 +18,7 @@ set(SRC
         aabb.h
         bvhnode.h
         perlin.h
+        rect.h
         )
 
 add_executable(
