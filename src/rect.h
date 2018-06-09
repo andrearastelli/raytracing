@@ -36,8 +36,8 @@ bool XY_Rect::hit(const Ray &r, float t0, float t1, HitRecord &rec) const
 
     if (x < x0 || x > x1 || y < y0 || y > y1) return false;
 
-    // rec.u = (x - x0) / (x1 - x0);
-    // rec.v = (y - y0) / (y1 - y0);
+    rec.u = (x - x0) / (x1 - x0);
+    rec.v = (y - y0) / (y1 - y0);
     rec.t = t;
     rec.mat_ptr = material;
     rec.p = r.point_at_parameter(t);
@@ -87,8 +87,8 @@ bool XZ_Rect::hit(const Ray &r, float t0, float t1, HitRecord &rec) const
 
     if (x < x0 || x > x1 || z < z0 || z > z1) return false;
 
-    // rec.u = (x - x0) / (x1 - x0);
-    // rec.v = (z - z0) / (z1 / z0);
+    rec.u = (x - x0) / (x1 - x0);
+    rec.v = (z - z0) / (z1 / z0);
     rec.t = t;
     rec.mat_ptr = material;
     rec.p = r.point_at_parameter(t);
@@ -138,8 +138,8 @@ bool YZ_Rect::hit(const Ray &r, float t0, float t1, HitRecord &rec) const
 
     if (y < y0 || y > y1 || z < z0 || z > z1) return false;
 
-    // rec.u = (y - y0) / (y1 - y0);
-    // rec.v = (z - z0) / (z1 - z0);
+    rec.u = (y - y0) / (y1 - y0);
+    rec.v = (z - z0) / (z1 - z0);
     rec.t = t;
     rec.mat_ptr = material;
     rec.p = r.point_at_parameter(t);

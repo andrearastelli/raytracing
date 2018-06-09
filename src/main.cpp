@@ -23,6 +23,7 @@ Color ray_color(const Ray &r, Hitable *world, int depth);
 
 Hitable *random_scene();
 Hitable *test_perlin();
+Hitable *cornell_box();
 
 
 int main(int argc, char *argv[])
@@ -34,10 +35,11 @@ int main(int argc, char *argv[])
     auto samples = input_data.samples;
 
     //Hitable *world = random_scene();
-    Hitable *world = test_perlin();
+    //Hitable *world = test_perlin();
+    Hitable *world = cornell_box();
 
-    auto lookfrom = Vec3{10.0f, 0.0f, 0.0f};
-    auto lookat = Vec3{0.0f, 0.0f, 0.0f};
+    auto lookfrom = Vec3{278.0f, 278.0f, -800.0f};
+    auto lookat = Vec3{278.0f, 278.0f, 0.0f};
     auto aperture = 0.0f;
     auto focal_length = (Vec3(-2.0f, 2.0f, 1.0f) - Vec3(0.0f, 0.0f, -1.0f)).length();
 
@@ -45,7 +47,7 @@ int main(int argc, char *argv[])
         lookfrom,
         lookat,
         Vec3::Y,
-        35,
+        40,
         static_cast<float>(image.width()) / static_cast<float>(image.height()),
         aperture,
         focal_length,
@@ -93,21 +95,21 @@ Color ray_color(const Ray &r, Hitable *world, int depth)
     {
         Ray scattered;
         Color attenuation;
+		
+        Color emitted = rec.mat_ptr->emitted(rec.u, rec.v, rec.p);
 
-        if (depth < 50 && rec.mat_ptr->scatter(r, rec, attenuation, scattered))
+        if (depth < 10 && rec.mat_ptr->scatter(r, rec, attenuation, scattered))
         {
-             return attenuation * ray_color(scattered, world, depth + 1);
+             return emitted + attenuation * ray_color(scattered, world, depth + 1);
         }
         else
         {
-            return Color(0, 0, 0);
+            return emitted;
         }
     }
     else
     {
-        Vec3 unit_direction = unit_vector(r.direction());
-        auto t = 0.5f * (unit_direction.y() + 1.0f);
-        return (1.0f - t) * Color(1.0f, 1.0f, 1.0f) + t * Color(0.5f, 0.7f, 1.0f);
+        return Color(0.0f, 0.0f, 0.0f);
     }
 }
 
@@ -119,9 +121,7 @@ Hitable *random_scene()
 	
 	int nx, ny, nn;
 	auto file_path = "sample_texture.jpg";
-	std::cout << file_path << std::endl;
 	unsigned char *texture_data = stbi_load(file_path, &nx, &ny, &nn, 0);
-	std::cout << texture_data[0] << std::endl;
 	Material *img_mat = new Lambertian(new ImageTexture(texture_data, nx, ny));
 
     list[0] = new Sphere(
@@ -199,4 +199,43 @@ Hitable *test_perlin()
     list[1] = new XY_Rect(3, 5, 1, 3, -2, new Lambertian(new ConstantTexture(Color(1.0f, 0.0f, 0.0f))));
 
     return new HitableList(list, 2);
+}
+
+
+Hitable *simple_light()
+{
+    Texture *noiseText = new NoiseTexture(4);
+
+    Hitable **list = new Hitable*[4];
+    list[0] = new Sphere({0.0f, -1000.0f, 0.0f}, 1000.0f, new Lambertian(noiseText));
+    list[1] = new Sphere({0.0f, 2.0f, 0.0f}, 2.0f, new Lambertian(noiseText));
+    list[2] = new Sphere({0.0f, 7.0f, 0.0f}, 2.0f, new DiffuseLight(new ConstantTexture(Color(4.0f, 4.0f, 4.0f))));
+    list[3] = new XY_Rect(3, 5, 1, 3, -2, new DiffuseLight(new ConstantTexture(Color(4.0f, 4.0f, 4.0f))));
+
+    return new HitableList(list, 4);
+}
+
+
+Hitable *cornell_box()
+{
+    Hitable **list = new Hitable*[6];
+    int i = 0;
+
+    Material *red = new Lambertian(new ConstantTexture(Color(0.65f, 0.05f, 0.05f)));
+    Material *white = new Lambertian(new ConstantTexture(Color(0.73f, 0.73f, 0.73f)));
+    Material *green = new Lambertian(new ConstantTexture(Color(0.12f, 0.45f, 0.15f)));
+
+    Material *light = new DiffuseLight(new ConstantTexture(Color(50, 50, 50)));
+
+    list[i++] = new FlipNormals(new YZ_Rect(0, 555, 0, 555, 555, green));
+    list[i++] = new YZ_Rect(0, 555, 0, 555, 0, red);
+    //list[i++] = new XZ_Rect(213, 343, 227, 332, 554, light);
+    list[i++] = new XZ_Rect(50, 505, 50, 505, 554, light);
+    list[i++] = new FlipNormals(new XZ_Rect(0, 555, 0, 555, 555, white));
+    list[i++] = new XZ_Rect(0, 555, 0, 555, 0, white);
+    list[i++] = new FlipNormals(new XY_Rect(0, 555, 0, 555, 555, white));
+    //list[i++] = new Translate(new RotateY(new box(vec3(0, 0, 0), vec3(165, 165, 165), white), -18), vec3(130,0,65));
+    //list[i++] = new Translate(new RotateY(new box(vec3(0, 0, 0), vec3(165, 330, 165), white),  15), vec3(265,0,295));
+
+    return new HitableList(list, i);
 }
