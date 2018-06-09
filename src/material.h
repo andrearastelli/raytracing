@@ -189,4 +189,27 @@ public:
     }
 };
 
+
+class Isotropic : public Material
+{
+
+private:
+    Texture *albedo;
+
+public:
+    Isotropic(Texture *a) : albedo(a) {}
+
+    virtual bool scatter(const Ray &r_in, const HitRecord &rec, Vec3 &attenuation, Ray &scattered) const;
+
+};
+
+bool Isotropic::scatter(const Ray &r_in, const HitRecord &rec, Vec3 &attenuation, Ray &scattered) const
+{
+    scattered = Ray(rec.p, random_in_unit_sphere());
+    attenuation = albedo->value(rec.u, rec.v, rec.p);
+
+    return true;
+}
+
+
 #endif //RAYTRACING_MATERIAL_H
