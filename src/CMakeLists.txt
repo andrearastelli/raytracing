@@ -13,6 +13,8 @@ set(SRC
         parser.h
         movingsphere.h
         texture.h
+		stb_image.h
+		#stb_image_write.h
 )
 
 add_executable(

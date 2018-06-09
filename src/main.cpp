@@ -13,6 +13,9 @@
 #include "parser.h"
 #include "texture.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 
 Color ray_color(const Ray &r, Hitable *world, int depth);
 
@@ -109,15 +112,18 @@ Hitable *random_scene()
 {
     auto n = 500;
     auto **list = new Hitable*[n+1];
+	
+	int nx, ny, nn;
+	auto file_path = "sample_texture.jpg";
+	std::cout << file_path << std::endl;
+	unsigned char *texture_data = stbi_load(file_path, &nx, &ny, &nn, 0);
+	std::cout << texture_data[0] << std::endl;
+	Material *img_mat = new Lambertian(new ImageTexture(texture_data, nx, ny));
 
     list[0] = new Sphere(
             {0.0f, -1000.0f, 0.0f},
             1000,
-            new Lambertian(new CheckerTexture(
-				new ConstantTexture(Color(0.2f, 0.3f, 0.1f)),
-				new ConstantTexture(Color(0.9f, 0.9f, 0.9f))
-				)
-			)
+            img_mat
     );
 
     std::size_t i = 1;
