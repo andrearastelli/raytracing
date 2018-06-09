@@ -199,11 +199,11 @@ private:
 public:
     Isotropic(Texture *a) : albedo(a) {}
 
-    virtual bool scatter(const Ray &r_in, const HitRecord &rec, Vec3 &attenuation, Ray &scattered) const;
+    virtual bool scatter(const Ray &r_in, const HitRecord &rec, Color &attenuation, Ray &scattered) const;
 
 };
 
-bool Isotropic::scatter(const Ray &r_in, const HitRecord &rec, Vec3 &attenuation, Ray &scattered) const
+bool Isotropic::scatter(const Ray &r_in, const HitRecord &rec, Color &attenuation, Ray &scattered) const
 {
     scattered = Ray(rec.p, random_in_unit_sphere());
     attenuation = albedo->value(rec.u, rec.v, rec.p);

@@ -13,6 +13,8 @@
 #include "material.h"
 #include "parser.h"
 #include "texture.h"
+#include "box.h"
+#include "constantmedium.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -218,24 +220,29 @@ Hitable *simple_light()
 
 Hitable *cornell_box()
 {
-    Hitable **list = new Hitable*[6];
+    Hitable **list = new Hitable*[8];
     int i = 0;
 
-    Material *red = new Lambertian(new ConstantTexture(Color(0.65f, 0.05f, 0.05f)));
+    Material *red = new Lambertian(new ConstantTexture(Color(0.95f, 0.05f, 0.05f)));
     Material *white = new Lambertian(new ConstantTexture(Color(0.73f, 0.73f, 0.73f)));
-    Material *green = new Lambertian(new ConstantTexture(Color(0.12f, 0.45f, 0.15f)));
+    Material *green = new Lambertian(new ConstantTexture(Color(0.05f, 0.95f, 0.05f)));
 
-    Material *light = new DiffuseLight(new ConstantTexture(Color(50, 50, 50)));
+    Material *light = new DiffuseLight(new ConstantTexture(Color(150, 150, 150)));
 
     list[i++] = new FlipNormals(new YZ_Rect(0, 555, 0, 555, 555, green));
+    //list[i++] = new RotateY(new YZ_Rect(0, 555, 0, 555, 555, green), 90.0f);
     list[i++] = new YZ_Rect(0, 555, 0, 555, 0, red);
     //list[i++] = new XZ_Rect(213, 343, 227, 332, 554, light);
     list[i++] = new XZ_Rect(50, 505, 50, 505, 554, light);
     list[i++] = new FlipNormals(new XZ_Rect(0, 555, 0, 555, 555, white));
     list[i++] = new XZ_Rect(0, 555, 0, 555, 0, white);
     list[i++] = new FlipNormals(new XY_Rect(0, 555, 0, 555, 555, white));
-    //list[i++] = new Translate(new RotateY(new box(vec3(0, 0, 0), vec3(165, 165, 165), white), -18), vec3(130,0,65));
-    //list[i++] = new Translate(new RotateY(new box(vec3(0, 0, 0), vec3(165, 330, 165), white),  15), vec3(265,0,295));
+
+    list[i++] = new Translate(new RotateY(new Box(Vec3(0, 0, 0), Vec3(165, 165, 165), white), -18), Vec3(130,0,65));
+    //list[i++] = new Translate(new RotateY(new Box(Vec3(0, 0, 0), Vec3(165, 330, 165), white),  15), Vec3(265,0,295));
+
+    auto *b1 = new Translate(new RotateY(new Box(Vec3(0, 0, 0), Vec3(165, 330, 165), white),  15), Vec3(265,0,295));
+    list[i++] = new ConstantMedium(b1, 0.01f, new ConstantTexture(Color(1.0f, 1.0f, 1.0f)));
 
     return new HitableList(list, i);
 }

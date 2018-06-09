@@ -20,6 +20,7 @@ set(SRC
     perlin.h
     rect.h
     constantmedium.h
+    box.h
 )
 
 add_executable(
