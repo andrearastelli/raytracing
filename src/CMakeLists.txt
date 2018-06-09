@@ -12,10 +12,12 @@ set(SRC
         material.h
         parser.h
         movingsphere.h
+        texture.h
+        stb_image.h
+    		#stb_image_write.h
         aabb.h
         bvhnode.h
         perlin.h
-        texture.h
         rect.h
         )
 
