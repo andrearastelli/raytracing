@@ -15,6 +15,16 @@
 #include "texture.h"
 
 
+#include <stdio.h>  /* defines FILENAME_MAX */
+#ifdef WINDOWS
+#include <direct.h>
+    #define GetCurrentDir _getcwd
+#else
+#include <unistd.h>
+#define GetCurrentDir getcwd
+#endif
+
+
 Color ray_color(const Ray &r, Hitable *world, int depth);
 
 
@@ -24,6 +34,20 @@ Hitable *test_perlin();
 
 int main(int argc, char *argv[])
 {
+    char cCurrentPath[FILENAME_MAX];
+
+    if (!GetCurrentDir(cCurrentPath, sizeof(cCurrentPath)))
+    {
+        return errno;
+    }
+
+    cCurrentPath[sizeof(cCurrentPath) - 1] = '\0'; /* not really required */
+
+    printf ("The current working directory is %s", cCurrentPath);
+
+    return 0;
+
+
     auto input_data = parser(argc, argv);
 
     Image image(input_data.output_path, input_data.width, input_data.height);
