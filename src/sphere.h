@@ -8,7 +8,7 @@
 #define M_PI 3.14159265358979323846
 
 
-class Sphere : public Hitable
+class Sphere: public Hitable
 {
 
 private:

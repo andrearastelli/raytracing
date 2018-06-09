@@ -19,8 +19,14 @@
 */
 class Material
 {
+	
 public:
-	virtual bool scatter(const Ray& ray_in, const HitRecord& hit, Color& attenuation, Ray& scattered) const = 0;
+    virtual bool scatter(const Ray& ray_in, const HitRecord& hit, Color& attenuation, Ray& scattered) const = 0;
+
+    virtual Color emitted(float u, float v, const Vec3& p) const 
+    {
+        return Color(0.0f, 0.0f, 0.0f);
+    }
 
 };
 
@@ -161,6 +167,26 @@ public:
         return true;
     }
 
+};
+
+
+class DiffuseLight: public Material
+{
+	
+public:
+    Texture *emit;
+
+    DiffuseLight(Texture *a): emit(a) {}
+
+    virtual bool scatter(const Ray& ray_in, const HitRecord& hit, Color& attenuation, Ray& scattered) const 
+    { 
+        return false; 
+    }
+
+    virtual Color emitted(float u, float v, const Vec3& p) const
+    {
+        return emit->value(u, v, p);
+    }
 };
 
 #endif //RAYTRACING_MATERIAL_H
