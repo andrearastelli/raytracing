@@ -249,11 +249,18 @@ Hitable *cornell_box()
     list[i++] = new XZ_Rect(0, 555, 0, 555, 0, white);
     list[i++] = new FlipNormals(new XY_Rect(0, 555, 0, 555, 555, white));
 
-    list[i++] = new Translate(new RotateY(new Box(Vec3(0, 0, 0), Vec3(165, 165, 165), white), -18), Vec3(130,0,65));
-    //list[i++] = new Translate(new RotateY(new Box(Vec3(0, 0, 0), Vec3(165, 330, 165), white),  15), Vec3(265,0,295));
+    list[i++] = new Translate(new Box(Vec3(0, 0, 0), Vec3(165, 165, 165), white), Vec3(130,0,65));
+    list[i++] = new Translate(new Box(Vec3(0, 0, 0), Vec3(165, 330, 165), white), Vec3(265,0,295));
 
-    auto *b1 = new Translate(new RotateY(new Box(Vec3(0, 0, 0), Vec3(165, 330, 165), white),  15), Vec3(265,0,295));
-    list[i++] = new ConstantMedium(b1, 0.01f, new ConstantTexture(Color(1.0f, 1.0f, 1.0f)));
+    auto *b1 = new Translate(
+            //new RotateY(
+                    new Box(
+                            Vec3(0, 0, 0), Vec3(165, 330, 165), white
+                    )//, 15
+            //),
+            , Vec3(265,0,295)
+    );
+    //list[i++] = new ConstantMedium(b1, 0.01f, new ConstantTexture(Color(1.0f, 1.0f, 1.0f)));
 
     return new HitableList(list, i);
 }
