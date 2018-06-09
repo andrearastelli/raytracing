@@ -14,13 +14,14 @@ class Sphere : public Hitable
 private:
     Vec3 center;
     float radius;
-	Material *mat_ptr;
+    Material *mat_ptr;
 
 public:
     Sphere() = default;
-	Sphere(Vec3 center, float radius, Material *mat) : center{ center }, radius{ radius }, mat_ptr{ mat } {}
+    Sphere(Vec3 center, float radius, Material *mat) : center{ center }, radius{ radius }, mat_ptr{ mat } {}
 
     virtual bool hit(const Ray &r, float tmin, float tmax, HitRecord &rec) const;
+    virtual bool bounding_box(float t0, float t1, AABB &box) const;
 
 };
 
@@ -42,7 +43,7 @@ bool Sphere::hit(const Ray &r, float tmin, float tmax, HitRecord &rec) const
             rec.t = temp;
             rec.p = r.point_at_parameter(rec.t);
             rec.normal = (rec.p - center) / radius;
-			rec.mat_ptr = mat_ptr;
+            rec.mat_ptr = mat_ptr;
 
             return true;
         }
@@ -54,7 +55,7 @@ bool Sphere::hit(const Ray &r, float tmin, float tmax, HitRecord &rec) const
             rec.t = temp;
             rec.p = r.point_at_parameter(rec.t);
             rec.normal = (rec.p - center) / radius;
-			rec.mat_ptr = mat_ptr;
+            rec.mat_ptr = mat_ptr;
 
             return true;
         }
@@ -64,6 +65,7 @@ bool Sphere::hit(const Ray &r, float tmin, float tmax, HitRecord &rec) const
 }
 
 
+
 void get_sphere_uv(const Vec3& p, float& u, float & v)
 {
 	float phi = atan2(p.z(), p.x());
@@ -71,6 +73,16 @@ void get_sphere_uv(const Vec3& p, float& u, float & v)
 	
 	u = 1.0f - (phi + M_PI) / (2.0f * M_PI);
 	v = (theta + M_PI / 2.0f) / M_PI;
+}
+
+bool Sphere::bounding_box(float t0, float t1, AABB &box) const
+{
+    box = AABB(
+            center - Vec3{radius, radius, radius},
+            center + Vec3{radius, radius, radius}
+    );
+
+    return true;
 }
 
 
