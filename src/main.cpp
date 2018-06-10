@@ -100,7 +100,7 @@ Color ray_color(const Ray &r, Hitable *world, int depth)
 		
         Color emitted = rec.mat_ptr->emitted(rec.u, rec.v, rec.p);
 
-        if (depth < 10 && rec.mat_ptr->scatter(r, rec, attenuation, scattered))
+        if (depth < 3 && rec.mat_ptr->scatter(r, rec, attenuation, scattered))
         {
              return emitted + attenuation * ray_color(scattered, world, depth + 1);
         }
@@ -228,9 +228,11 @@ Hitable *cornell_box()
     auto c_white = Color(0.8f, 0.8f, 0.8f);
     auto c_yellow = Color(1.0f, 1.0f, 0.0f);
 
-    std::cout << c_green << std::endl;
-
     Material *red = new Lambertian(new ConstantTexture(c_red));
+    int nx, ny, nn;
+    auto file_path = "sample_texture.jpg";
+    unsigned char *texture_data = stbi_load(file_path, &nx, &ny, &nn, 0);
+    Material *image = new Lambertian(new ImageTexture(texture_data, nx, ny));
     Material *white = new Lambertian(new ConstantTexture(c_white));
     Material *green = new Lambertian(new ConstantTexture(c_green));
     Material *yellow = new Lambertian(new ConstantTexture(c_yellow));
@@ -238,8 +240,7 @@ Hitable *cornell_box()
     Material *light = new DiffuseLight(new ConstantTexture(Color(150, 150, 150)));
 
     list[i++] = new FlipNormals(new YZ_Rect(0, 555, 0, 555, 555, green));
-    list[i++] = new YZ_Rect(0, 555, 0, 555, 0, red);
-    std::cout << i << std::endl;
+    list[i++] = new YZ_Rect(0, 555, 0, 555, 0, image);
 
     //list[i++] = new RotateY(new YZ_Rect(0, 555, 0, 555, 555, green), 90.0f);
 
@@ -257,6 +258,6 @@ Hitable *cornell_box()
 
     auto *b2 = new Translate(new Box(Vec3(0, 0, 0), Vec3(165, 165, 165), white), Vec3(130,0,65));
     list[i++] = new ConstantMedium(b2, 0.01f, new ConstantTexture(Color(0.0f, 0.0f, 0.0f)));
-
+    
     return new HitableList(list, i);
 }
