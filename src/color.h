@@ -52,10 +52,23 @@ public:
      */
     Color(float r, float g, float b): c{r, g, b} {}
 
+    /**
+     * @brief Construct a new Color object
+     * 
+     * @param v 
+     */
     Color(const Vec3 &v): c{v.x(), v.y(), v.z()} {}
 
     /**
-     * Default destructor.
+     * @brief Construct a new Color object using single value to fill RGB color.
+     * 
+     * @param c float value used to define all RGB component of this color.
+     */
+    explicit Color(float gray) : c{gray, gray, gray} {}
+
+    /**
+     * @brief Destroy the Color object
+     * 
      */
     ~Color() = default;
 
