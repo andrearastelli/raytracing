@@ -97,7 +97,7 @@ public:
 	{
 		Vec3 target = hit.p + hit.normal + random_in_unit_sphere();
 		scattered = Ray(hit.p, target - hit.p, ray_in.time());
-		attenuation = albedo->value(0, 0, hit.p);
+		attenuation = albedo->value(hit.u, hit.v, hit.p);
 
 		return true;
 	}

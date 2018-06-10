@@ -1,11 +1,19 @@
 #ifndef RAYTRACING_SPHERE_H
 #define RAYTRACING_SPHERE_H
 
-
 #include "hitable.h"
 #include "material.h"
 
 #define M_PI 3.14159265358979323846
+
+
+void get_sphere_uv(const Vec3& p, float& u, float& v)
+{
+	float phi = atan2(p.z(), p.x());
+	float theta = asin(p.y());
+	u = 1.0f - (phi + M_PI) / (2.0f * M_PI);
+	v = (theta + M_PI / 2.0f) / M_PI;
+}
 
 
 class Sphere: public Hitable
@@ -42,6 +50,7 @@ bool Sphere::hit(const Ray &r, float tmin, float tmax, HitRecord &rec) const
         {
             rec.t = temp;
             rec.p = r.point_at_parameter(rec.t);
+            get_sphere_uv((rec.p - center) / radius, rec.u, rec.v);
             rec.normal = (rec.p - center) / radius;
             rec.mat_ptr = mat_ptr;
 
@@ -54,6 +63,7 @@ bool Sphere::hit(const Ray &r, float tmin, float tmax, HitRecord &rec) const
         {
             rec.t = temp;
             rec.p = r.point_at_parameter(rec.t);
+            get_sphere_uv((rec.p - center) / radius, rec.u, rec.v);
             rec.normal = (rec.p - center) / radius;
             rec.mat_ptr = mat_ptr;
 
@@ -64,16 +74,6 @@ bool Sphere::hit(const Ray &r, float tmin, float tmax, HitRecord &rec) const
     return false;
 }
 
-
-
-void get_sphere_uv(const Vec3& p, float& u, float & v)
-{
-	float phi = atan2(p.z(), p.x());
-	float theta = asin(p.y());
-	
-	u = 1.0f - (phi + M_PI) / (2.0f * M_PI);
-	v = (theta + M_PI / 2.0f) / M_PI;
-}
 
 bool Sphere::bounding_box(float t0, float t1, AABB &box) const
 {
