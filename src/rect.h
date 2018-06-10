@@ -41,7 +41,7 @@ bool XY_Rect::hit(const Ray &r, float t0, float t1, HitRecord &rec) const
     rec.t = t;
     rec.mat_ptr = material;
     rec.p = r.point_at_parameter(t);
-    rec.normal = Vec3(.0f, .0f, 1.0f);
+    rec.normal = Vec3::Z;
 
     return true;
 }
@@ -92,7 +92,7 @@ bool XZ_Rect::hit(const Ray &r, float t0, float t1, HitRecord &rec) const
     rec.t = t;
     rec.mat_ptr = material;
     rec.p = r.point_at_parameter(t);
-    rec.normal = Vec3(.0f, 1.0f, .0f);
+    rec.normal = Vec3::Y;
 
     return true;
 }
@@ -143,7 +143,7 @@ bool YZ_Rect::hit(const Ray &r, float t0, float t1, HitRecord &rec) const
     rec.t = t;
     rec.mat_ptr = material;
     rec.p = r.point_at_parameter(t);
-    rec.normal = Vec3(1.0f, .0f, .0f);
+    rec.normal = Vec3::X;
 
     return true;
 }
