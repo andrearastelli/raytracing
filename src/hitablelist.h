@@ -55,7 +55,7 @@ bool HitableList::bounding_box(float t0, float t1, AABB &box) const
     else
         box = temp_box;
 
-    for (auto i=1; i<list_size; ++i)
+    for (size_t i=1; i<list_size; ++i)
     {
         if (list[i]->bounding_box(t0, t1, temp_box))
         {
