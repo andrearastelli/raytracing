@@ -23,11 +23,10 @@
 
 
 Color ray_color(const Ray &r, Hitable *world, int depth);
-
-
-Hitable *random_scene();
-Hitable *test_perlin();
-Hitable *cornell_box();
+Hitable* random_scene();
+Hitable* test_perlin();
+Hitable* simple_liht();
+Hitable* cornell_box();
 
 
 int main(int argc, char *argv[])
@@ -107,6 +106,16 @@ int main(int argc, char *argv[])
 }
 
 
+/**
+ * @brief Recursive ray/hit function with a depth limit level
+ *
+ * @param r They ray to go through.
+ *          The first ray will be the ray from the camera through the pixel.
+ * @param world The hitable object to inspect with the ray.
+ * @param depth The depth level (the number of bounces of the ray)
+ *
+ * @return Color The pixel color evaluated at the end of the recursion.
+ */
 Color ray_color(const Ray &r, Hitable *world, int depth)
 {
     HitRecord rec;
@@ -135,7 +144,12 @@ Color ray_color(const Ray &r, Hitable *world, int depth)
 }
 
 
-Hitable *random_scene()
+/**
+ * @brief Random scene from the Shirley's book.
+ *
+ * @return Hitable* The generated scene as a HitableList object.
+ */
+Hitable* random_scene()
 {
     auto n = 500;
     auto **list = new Hitable*[n+1];
@@ -212,7 +226,12 @@ Hitable *random_scene()
 }
 
 
-Hitable *test_perlin()
+/**
+ * @brief
+ *
+ * @return Hitable*
+ */
+Hitable* test_perlin()
 {
     auto **list = new Hitable*[2];
 
@@ -223,7 +242,12 @@ Hitable *test_perlin()
 }
 
 
-Hitable *simple_light()
+/**
+ * @brief
+ *
+ * @return Hitable*
+ */
+Hitable* simple_light()
 {
     Texture *noiseText = new NoiseTexture(4);
 
@@ -237,7 +261,12 @@ Hitable *simple_light()
 }
 
 
-Hitable *cornell_box()
+/**
+ * @brief
+ *
+ * @return Hitable*
+ */
+Hitable* cornell_box()
 {
     Hitable **list = new Hitable*[1000];
     int i = 0;
