@@ -5,6 +5,6 @@ bin/
 .idea/
 .vscode/
 
-*.ppm
+*.[jpg|jpeg|png|ppm]
 
 .DS_Store
