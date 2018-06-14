@@ -8,5 +8,6 @@ bin/
 *.jp*g
 *.png
 *.ppm
+!resource/*.*
 
 .DS_Store
