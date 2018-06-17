@@ -3,7 +3,11 @@
 build/
 bin/
 .idea/
+.vscode/
 
+*.jp*g
+*.png
 *.ppm
+!resource/*.*
 
 .DS_Store

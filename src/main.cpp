@@ -1,6 +1,8 @@
 #include <iostream>
+#include <iomanip>
 #include <limits>
 #include <random>
+#include <chrono>
 
 #include "image.h"
 #include "vec3.h"
@@ -21,11 +23,10 @@
 
 
 Color ray_color(const Ray &r, Hitable *world, int depth);
-
-
-Hitable *random_scene();
-Hitable *test_perlin();
-Hitable *cornell_box();
+Hitable* random_scene();
+Hitable* test_perlin();
+Hitable* simple_liht();
+Hitable* cornell_box();
 
 
 int main(int argc, char *argv[])
@@ -63,6 +64,12 @@ int main(int argc, char *argv[])
 	auto max_rand_jitter = 1.0f - 1.0f / samples;
 	std::uniform_real_distribution<float> jitter(0.0f, max_rand_jitter);
 
+
+    auto increment = 1.0f / (image.width() * image.height() * samples);
+    auto progress = increment;
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+
     // IMAGE PROCESSING
     for (int idY=image.height() - 1; idY>=0; --idY)
     {
@@ -77,6 +84,9 @@ int main(int argc, char *argv[])
 
                 auto r = cam.get_ray(u, v);
                 col += ray_color(r, world, 0);
+
+                progress += increment;
+                std::cout << "Progress: " << std::setw(5) << progress * 100.0f << "%" << std::endl;
             }
 
             col /= static_cast<float>(samples);
@@ -85,24 +95,42 @@ int main(int argc, char *argv[])
         }
     }
 
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+    auto duration_s = std::chrono::duration_cast<std::chrono::seconds>(end_time - start_time);
+
+    std::cout << "Render time: " << duration_ms.count() << "ms" << std::endl;
+    std::cout << "Render time: " << duration_s.count() << "s" << std::endl;
+
     return 0;
 }
 
 
+/**
+ * @brief Recursive ray/hit function with a depth limit level
+ *
+ * @param r They ray to go through.
+ *          The first ray will be the ray from the camera through the pixel.
+ * @param world The hitable object to inspect with the ray.
+ * @param depth The depth level (the number of bounces of the ray)
+ *
+ * @return Color The pixel color evaluated at the end of the recursion.
+ */
 Color ray_color(const Ray &r, Hitable *world, int depth)
 {
     HitRecord rec;
+
 
     if (world->hit(r, 0.001f, std::numeric_limits<float>::max(), rec))
     {
         Ray scattered;
         Color attenuation;
-		
+
         Color emitted = rec.mat_ptr->emitted(rec.u, rec.v, rec.p);
 
-        if (depth < 3 && rec.mat_ptr->scatter(r, rec, attenuation, scattered))
+        if (depth < 5 && rec.mat_ptr->scatter(r, rec, attenuation, scattered))
         {
-             return emitted + attenuation * ray_color(scattered, world, depth + 1);
+            return emitted + attenuation * ray_color(scattered, world, depth + 1);
         }
         else
         {
@@ -116,11 +144,16 @@ Color ray_color(const Ray &r, Hitable *world, int depth)
 }
 
 
-Hitable *random_scene()
+/**
+ * @brief Random scene from the Shirley's book.
+ *
+ * @return Hitable* The generated scene as a HitableList object.
+ */
+Hitable* random_scene()
 {
     auto n = 500;
     auto **list = new Hitable*[n+1];
-	
+
 	int nx, ny, nn;
 	auto file_path = "sample_texture.jpg";
 	unsigned char *texture_data = stbi_load(file_path, &nx, &ny, &nn, 0);
@@ -193,10 +226,15 @@ Hitable *random_scene()
 }
 
 
-Hitable *test_perlin()
+/**
+ * @brief
+ *
+ * @return Hitable*
+ */
+Hitable* test_perlin()
 {
     auto **list = new Hitable*[2];
-  
+
     list[0] = new Sphere({0.0f, 20.0f, 0.0f}, 20.0f, new Lambertian{new NoiseTexture(1.0f)});
     list[1] = new XY_Rect(3, 5, 1, 3, -2, new Lambertian(new ConstantTexture(Color(1.0f, 0.0f, 0.0f))));
 
@@ -204,7 +242,12 @@ Hitable *test_perlin()
 }
 
 
-Hitable *simple_light()
+/**
+ * @brief
+ *
+ * @return Hitable*
+ */
+Hitable* simple_light()
 {
     Texture *noiseText = new NoiseTexture(4);
 
@@ -218,9 +261,14 @@ Hitable *simple_light()
 }
 
 
-Hitable *cornell_box()
+/**
+ * @brief
+ *
+ * @return Hitable*
+ */
+Hitable* cornell_box()
 {
-    Hitable **list = new Hitable*[7];
+    Hitable **list = new Hitable*[1000];
     int i = 0;
 
     auto c_red = Color(1.0f, 0.0f, 0.0f);
@@ -237,7 +285,7 @@ Hitable *cornell_box()
     Material *green = new Lambertian(new ConstantTexture(c_green));
     Material *yellow = new Lambertian(new ConstantTexture(c_yellow));
 
-    Material *light = new DiffuseLight(new ConstantTexture(Color(150, 150, 150)));
+    Material *light = new DiffuseLight(new ConstantTexture(Color(1.0f)));
 
     list[i++] = new FlipNormals(new YZ_Rect(0, 555, 0, 555, 555, green));
     list[i++] = new YZ_Rect(0, 555, 0, 555, 0, image);
@@ -246,6 +294,7 @@ Hitable *cornell_box()
 
     //list[i++] = new XZ_Rect(213, 343, 227, 332, 554, light);
     list[i++] = new XZ_Rect(50, 505, 50, 505, 554, light);
+
     list[i++] = new FlipNormals(new XZ_Rect(0, 555, 0, 555, 555, white));
     list[i++] = new XZ_Rect(0, 555, 0, 555, 0, white);
     list[i++] = new FlipNormals(new XY_Rect(0, 555, 0, 555, 555, white));
@@ -258,6 +307,6 @@ Hitable *cornell_box()
 
     auto *b2 = new Translate(new Box(Vec3(0, 0, 0), Vec3(165, 165, 165), white), Vec3(130,0,65));
     list[i++] = new ConstantMedium(b2, 0.01f, new ConstantTexture(Color(0.0f, 0.0f, 0.0f)));
-    
+
     return new HitableList(list, i);
 }

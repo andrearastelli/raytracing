@@ -69,8 +69,8 @@ public:
 
 Color ImageTexture::value(float u, float v, const Vec3& p) const 
 {
-    int i = u * nx;
-    int j = (1 - v) * ny - 0.001f;
+    int i = static_cast<int>(u * nx);
+    int j = static_cast<int>((1 - v) * ny - 0.001f);
 
     if (i < 0) i = 0;
     if (j < 0) j = 0;

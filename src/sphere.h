@@ -9,10 +9,11 @@
 
 void get_sphere_uv(const Vec3& p, float& u, float& v)
 {
-	float phi = atan2(p.z(), p.x());
-	float theta = asin(p.y());
-	u = 1.0f - (phi + M_PI) / (2.0f * M_PI);
-	v = (theta + M_PI / 2.0f) / M_PI;
+	float phi = std::atan2(p.z(), p.x());
+	float theta = std::asin(p.y());
+
+	u = static_cast<float>(1.0f - (phi + M_PI) / (2.0f * M_PI));
+	v = static_cast<float>((theta + M_PI / 2.0f) / M_PI);
 }
 
 

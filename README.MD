@@ -7,7 +7,7 @@
 # Raytracing in One Weekend and beyond
 
 ## 1.0.0
-![Imgur](https://i.imgur.com/KLX1Kv6.png)
+![Imgur](resource/render_0001.png)
 
 Image info:
 - 48 spheres (ground + 3 main spheres + 44 small spheres)
