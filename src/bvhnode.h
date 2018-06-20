@@ -20,14 +20,14 @@ private:
 
 public:
     BVHNode() = default;
-    BVHNode(Hitable **l, int n, float time0, float time1);
-    virtual bool hit(const Ray &r, float tmin, float tmax, HitRecord &rec) const;
-    virtual bool bounding_box(float t0, float t1, AABB &b) const;
+    BVHNode(Hitable **l, std::size_t n, float time0, float time1);
+    bool hit(const Ray &r, float tmin, float tmax, HitRecord &rec) const override;
+    bool bounding_box(float t0, float t1, AABB &b) const override;
 
 };
 
 
-BVHNode::BVHNode(Hitable **l, int n, float time0, float time1)
+BVHNode::BVHNode(Hitable **l, std::size_t n, float time0, float time1)
 {
     auto axis = static_cast<int>(3 * dist(m));
 

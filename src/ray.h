@@ -2,9 +2,6 @@
 #define RAYTRACING_RAY_H
 
 
-#include <cmath>
-
-
 #include "vec3.h"
 #include "color.h"
 

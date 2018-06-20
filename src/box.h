@@ -18,8 +18,8 @@ public:
     Box() = default;
     Box(const Vec3 &p0, const Vec3 &p1, Material *ptr);
 
-    virtual bool hit(const Ray &r, float t0, float t1, HitRecord &rec) const;
-    virtual bool bounding_box(float t0, float t1, AABB &box) const;
+    bool hit(const Ray &r, float t0, float t1, HitRecord &rec) const override;
+    bool bounding_box(float t0, float t1, AABB &box) const override;
 
 };
 
@@ -29,13 +29,15 @@ Box::Box(const Vec3 &p0, const Vec3 &p1, Material *ptr)
     min = p0;
     max = p1;
 
-    Hitable **list = new Hitable*[6];
+    auto **list = new Hitable*[6];
 
     size_t i = 0;
 
+    /*
     auto pxy = new XY_Rect(p0.x(), p1.x(), p0.y(), p1.y(), p1.z(), ptr);
     auto pxz = new XZ_Rect(p0.x(), p1.x(), p0.z(), p1.z(), p1.y(), ptr);
     auto pyz = new YZ_Rect(p0.y(), p1.y(), p0.z(), p1.z(), p1.x(), ptr);
+    */
 
     list[i++] =                 new XY_Rect(p0.x(), p1.x(), p0.y(), p1.y(), p1.z(), ptr);
     list[i++] = new FlipNormals(new XY_Rect(p0.x(), p1.x(), p0.y(), p1.y(), p0.z(), ptr));

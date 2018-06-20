@@ -86,8 +86,11 @@ int main(int argc, char *argv[])
                 col += ray_color(r, world, 0);
 
                 progress += increment;
-                std::cout << "Progress: " << std::setw(5) << progress * 100.0f << "%" << std::endl;
             }
+
+            std::cout << std::setprecision(3);
+            std::cout << std::fixed;
+            std::cout << "Progress: " << std::setw(7) << progress * 100.0f << "%" << std::endl;
 
             col /= static_cast<float>(samples);
 
@@ -99,8 +102,8 @@ int main(int argc, char *argv[])
     auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
     auto duration_s = std::chrono::duration_cast<std::chrono::seconds>(end_time - start_time);
 
-    std::cout << "Render time: " << duration_ms.count() << "ms" << std::endl;
-    std::cout << "Render time: " << duration_s.count() << "s" << std::endl;
+    std::clog << "Render time: " << duration_ms.count() << "ms" << std::endl;
+    std::clog << "Render time: " << duration_s.count() << "s" << std::endl;
 
     return 0;
 }

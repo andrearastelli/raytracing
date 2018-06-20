@@ -89,11 +89,11 @@ Vec3 random_in_unit_sphere()
 class Lambertian : public Material
 {
 public:
-	Lambertian(Texture *a) : albedo(a) {};
+	explicit Lambertian(Texture *a) : albedo(a) {};
 
 	Texture *albedo;
 
-	virtual bool scatter(const Ray& ray_in, const HitRecord& hit, Color& attenuation, Ray& scattered) const
+	bool scatter(const Ray& ray_in, const HitRecord& hit, Color& attenuation, Ray& scattered) const override
 	{
 		Vec3 target = hit.p + hit.normal + random_in_unit_sphere();
 		scattered = Ray(hit.p, target - hit.p, ray_in.time());
@@ -112,7 +112,7 @@ public:
 	Color albedo;
 	float fuzziness;
 
-	virtual bool scatter(const Ray& ray_in, const HitRecord& hit, Color& attenuation, Ray& scattered) const
+	bool scatter(const Ray& ray_in, const HitRecord& hit, Color& attenuation, Ray& scattered) const override
 	{
 		Vec3 reflected = reflect(unit_vector(ray_in.direction()), hit.normal);
 		scattered = Ray(hit.p, reflected + fuzziness * random_in_unit_sphere(), ray_in.time());
@@ -128,9 +128,9 @@ class Dielectric : public Material
 public:
     float ref_idx;
 
-    Dielectric(float ri) : ref_idx(ri) {}
+    explicit Dielectric(float ri) : ref_idx(ri) {}
 
-    virtual bool scatter(const Ray& r_in, const HitRecord& hit, Color& attenuation, Ray& scattered) const
+    bool scatter(const Ray& r_in, const HitRecord& hit, Color& attenuation, Ray& scattered) const override
     {
         Vec3 outward_normal;
         Vec3 reflected = reflect(r_in.direction(), hit.normal);
@@ -176,14 +176,14 @@ class DiffuseLight: public Material
 public:
     Texture *emit;
 
-    DiffuseLight(Texture *a): emit(a) {}
+    explicit DiffuseLight(Texture *a): emit(a) {}
 
-    virtual bool scatter(const Ray& ray_in, const HitRecord& hit, Color& attenuation, Ray& scattered) const 
+    bool scatter(const Ray& ray_in, const HitRecord& hit, Color& attenuation, Ray& scattered) const override
     { 
         return false; 
     }
 
-    virtual Color emitted(float u, float v, const Vec3& p) const
+    Color emitted(float u, float v, const Vec3& p) const override
     {
         return emit->value(u, v, p);
     }
@@ -197,9 +197,9 @@ private:
     Texture *albedo;
 
 public:
-    Isotropic(Texture *a) : albedo(a) {}
+    explicit Isotropic(Texture *a) : albedo(a) {}
 
-    virtual bool scatter(const Ray &r_in, const HitRecord &rec, Color &attenuation, Ray &scattered) const;
+    bool scatter(const Ray &r_in, const HitRecord &rec, Color &attenuation, Ray &scattered) const override;
 
 };
 
