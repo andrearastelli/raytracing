@@ -26,7 +26,7 @@ bool ConstantMedium::hit(const Ray &r, float t_min, float t_max, HitRecord &rec)
 {
     bool db = (dist(m) < 0.00001);
 
-    // db = false; // ???
+    db = false; // ???
 
     HitRecord rec1, rec2;
 
