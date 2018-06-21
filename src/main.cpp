@@ -3,6 +3,8 @@
 #include <limits>
 #include <random>
 #include <chrono>
+#include <fstream>
+#include <string>
 
 #include "image.h"
 #include "vec3.h"
@@ -70,6 +72,9 @@ int main(int argc, char *argv[])
 
     auto start_time = std::chrono::high_resolution_clock::now();
 
+    auto ipercent = 0;
+    auto iprevpercent = 0;
+
     // IMAGE PROCESSING
     for (int idY=image.height() - 1; idY>=0; --idY)
     {
@@ -88,9 +93,13 @@ int main(int argc, char *argv[])
                 progress += increment;
             }
 
-            std::cout << std::setprecision(3);
-            std::cout << std::fixed;
-            std::cout << "Progress: " << std::setw(7) << progress * 100.0f << "%" << std::endl;
+
+            ipercent = static_cast<int>(std::round(progress * 100.0f));
+            if (ipercent != iprevpercent)
+            {
+                iprevpercent = ipercent;
+                std::cout << "=" << std::flush;
+            }
 
             col /= static_cast<float>(samples);
 
@@ -102,8 +111,9 @@ int main(int argc, char *argv[])
     auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
     auto duration_s = std::chrono::duration_cast<std::chrono::seconds>(end_time - start_time);
 
-    std::clog << "Render time: " << duration_ms.count() << "ms" << std::endl;
-    std::clog << "Render time: " << duration_s.count() << "s" << std::endl;
+    std::cout << std::cout.widen('\n');
+    std::cout << "Render time: " << duration_ms.count() << "ms" << std::cout.widen('\n');
+    std::cout << "Render time: " << duration_s.count() << "s" << std::cout.widen('\n');
 
     return 0;
 }
