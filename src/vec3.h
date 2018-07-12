@@ -12,8 +12,10 @@ class Vec3
 {
 
 public:
-    //std::array<float, 3> v;
-    __m128 v;
+    union {
+        float v_f[4] __attribute__((aligned(0x1000)));
+        __m128 v;
+    };
 
 public:
     static const Vec3 X;
@@ -23,18 +25,21 @@ public:
     static const Vec3 ZERO;
 
 public:
-    Vec3() { v = _mm_setzero_ps(); }
-    Vec3(float x, float y, float z, float w=0.0f) : v{_mm_set_ps(x, y, z, w)} {}
+    Vec3() : v_f{0} {}
+    Vec3(float x, float y, float z, float w=0.0f) : v_f{x, y, z, w} {}
     explicit Vec3(__m128 v) : v{v} {}
 
-    float x() const { float v_f[4]{0}; _mm_store_ps(v_f, v); return v_f[0]; }
-    float y() const { float v_f[4]{0}; _mm_store_ps(v_f, v); return v_f[1]; }
-    float z() const { float v_f[4]{0}; _mm_store_ps(v_f, v); return v_f[2]; }
+    float x() const { float v_f[4]{0}; _mm_storeu_ps(v_f, v); return v_f[0]; }
+    float y() const { float v_f[4]{0}; _mm_storeu_ps(v_f, v); return v_f[1]; }
+    float z() const { float v_f[4]{0}; _mm_storeu_ps(v_f, v); return v_f[2]; }
 	
 	const Vec3& operator+() const { return *this; }
 	Vec3 operator-() const { return Vec3(_mm_mul_ps(v, _mm_set1_ps(-1))); }
-	float operator[](int i) const { float v_f[4]{0}; _mm_store_ps(v_f, v); return v_f[i]; }
-	float& operator[](int i) { float v_f[4]{0}; _mm_store_ps(v_f, v); return v_f[i]; }
+	float operator[](int i) const {
+        return v_f[i];
+    }
+	float& operator[](int i) {
+        return v_f[i]; }
 	
 	Vec3& operator+=(const Vec3 &v1);
 	Vec3& operator-=(const Vec3 &v1);
