@@ -55,8 +55,8 @@ public:
      */
     Translate(Hitable *p, const Vec3 &displacement): ptr(p), offset(displacement) {}
 
-    virtual bool hit(const Ray &r, float t_min, float t_max, HitRecord &rec) const;
-    virtual bool bounding_box(float t0, float t1, AABB &box) const;
+    bool hit(const Ray &r, float t_min, float t_max, HitRecord &rec) const override;
+    bool bounding_box(float t0, float t1, AABB &box) const override;
 
 };
 
@@ -111,8 +111,8 @@ public:
      */
     RotateY(Hitable *p, float angle);
 
-    virtual bool hit(const Ray &r, float t_min, float t_max, HitRecord &rec) const;
-    virtual bool bounding_box(float t0, float t1, AABB &box) const { box = bbox; return hasbox; }
+    bool hit(const Ray &r, float t_min, float t_max, HitRecord &rec) const override;
+    bool bounding_box(float t0, float t1, AABB &box) const override { box = bbox; return hasbox; }
 
 };
 
@@ -191,9 +191,9 @@ class FlipNormals: public Hitable
 public:
     Hitable *ptr;
 
-    FlipNormals(Hitable *p): ptr(p) {}
+    explicit FlipNormals(Hitable *p): ptr(p) {}
 
-    virtual bool hit(const Ray& r, float t_min, float t_max, HitRecord& rec) const 
+    bool hit(const Ray& r, float t_min, float t_max, HitRecord& rec) const override
     {
         if(ptr->hit(r, t_min, t_max, rec)) 
         {
@@ -204,7 +204,7 @@ public:
             return false;
     }
 
-    virtual bool bounding_box(float t0, float t1, AABB& box) const 
+    bool bounding_box(float t0, float t1, AABB& box) const override
     {
         return ptr->bounding_box(t0, t1, box);
     }

@@ -20,7 +20,10 @@ public:
     /**
      *
      */
-    MovingSphere() = default;
+    MovingSphere()
+            : time0{0}, time1{1},
+              center0{0.0f, 0.0f, 0.0f}, center1{0.0f, 0.0f, 0.0f},
+              radius{1.0f}, mat_ptr{nullptr} {};
 
     /**
      *
@@ -42,7 +45,7 @@ public:
      * @param rec
      * @return
      */
-    virtual bool hit(const Ray &r, float tmin, float tmax, HitRecord &rec) const;
+    bool hit(const Ray &r, float tmin, float tmax, HitRecord &rec) const override;
 
 
     /**
@@ -52,7 +55,7 @@ public:
      * @param box
      * @return
      */
-    virtual bool bounding_box(float t0, float t1, AABB &box) const;
+    bool bounding_box(float t0, float t1, AABB &box) const override;
 
 
     /**

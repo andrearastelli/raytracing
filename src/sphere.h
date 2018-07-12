@@ -4,8 +4,6 @@
 #include "hitable.h"
 #include "material.h"
 
-#define M_PI 3.14159265358979323846
-
 
 void get_sphere_uv(const Vec3& p, float& u, float& v)
 {
@@ -26,11 +24,11 @@ private:
     Material *mat_ptr;
 
 public:
-    Sphere() = default;
+    Sphere(): center{0.0f, 0.0f, 0.0f}, radius{1}, mat_ptr{nullptr} {};
     Sphere(Vec3 center, float radius, Material *mat) : center{ center }, radius{ radius }, mat_ptr{ mat } {}
 
-    virtual bool hit(const Ray &r, float tmin, float tmax, HitRecord &rec) const;
-	virtual bool bounding_box(float t0, float t1, AABB &box) const;
+    bool hit(const Ray &r, float tmin, float tmax, HitRecord &rec) const override;
+    bool bounding_box(float t0, float t1, AABB &box) const override;
 
 };
 

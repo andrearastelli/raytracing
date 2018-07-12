@@ -17,8 +17,8 @@ private:
 public:
     ConstantMedium(Hitable *b, float d, Texture *a) : bounday(b), density(d) { phase_function = new Isotropic(a); }
 
-    virtual bool hit(const Ray &r, float t_min, float t_max, HitRecord &rec) const;
-    virtual bool bounding_box(float t0, float t1, AABB &box) const;
+    bool hit(const Ray &r, float t_min, float t_max, HitRecord &rec) const override;
+    bool bounding_box(float t0, float t1, AABB &box) const override;
 
 };
 
@@ -26,7 +26,7 @@ bool ConstantMedium::hit(const Ray &r, float t_min, float t_max, HitRecord &rec)
 {
     bool db = (dist(m) < 0.00001);
 
-    // db = false; // ???
+    db = false; // ???
 
     HitRecord rec1, rec2;
 

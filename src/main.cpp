@@ -3,6 +3,8 @@
 #include <limits>
 #include <random>
 #include <chrono>
+#include <fstream>
+#include <string>
 
 #include "image.h"
 #include "vec3.h"
@@ -27,6 +29,7 @@ Hitable* random_scene();
 Hitable* test_perlin();
 Hitable* simple_liht();
 Hitable* cornell_box();
+Hitable* light_spheres();
 
 
 int main(int argc, char *argv[])
@@ -39,10 +42,11 @@ int main(int argc, char *argv[])
 
     //Hitable *world = random_scene();
     //Hitable *world = test_perlin();
-    Hitable *world = cornell_box();
+    //Hitable *world = cornell_box();
+    Hitable *world = light_spheres();
 
-    auto lookfrom = Vec3{278.0f, 278.0f, -800.0f};
-    auto lookat = Vec3{278.0f, 278.0f, 0.0f};
+    auto lookfrom = Vec3{10.0f, 20.0f, 10.0f};
+    auto lookat = Vec3{0.0f, 0.0f, 0.0f};
     auto aperture = 0.0f;
     auto focal_length = (Vec3(-2.0f, 2.0f, 1.0f) - Vec3(0.0f, 0.0f, -1.0f)).length();
 
@@ -70,6 +74,9 @@ int main(int argc, char *argv[])
 
     auto start_time = std::chrono::high_resolution_clock::now();
 
+    auto ipercent = 0;
+    auto iprevpercent = 0;
+
     // IMAGE PROCESSING
     for (int idY=image.height() - 1; idY>=0; --idY)
     {
@@ -86,7 +93,16 @@ int main(int argc, char *argv[])
                 col += ray_color(r, world, 0);
 
                 progress += increment;
-                std::cout << "Progress: " << std::setw(5) << progress * 100.0f << "%" << std::endl;
+            }
+
+
+            ipercent = static_cast<int>(std::round(progress * 100.0f));
+            if (ipercent != iprevpercent)
+            {
+                for (int i=0; i<(ipercent-iprevpercent); ++i)
+                    std::cout << "=" << std::flush;
+
+                iprevpercent = ipercent;
             }
 
             col /= static_cast<float>(samples);
@@ -99,8 +115,9 @@ int main(int argc, char *argv[])
     auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
     auto duration_s = std::chrono::duration_cast<std::chrono::seconds>(end_time - start_time);
 
-    std::cout << "Render time: " << duration_ms.count() << "ms" << std::endl;
-    std::cout << "Render time: " << duration_s.count() << "s" << std::endl;
+    std::cout << std::cout.widen('\n');
+    std::cout << "Render time: " << duration_ms.count() << "ms" << std::cout.widen('\n');
+    std::cout << "Render time: " << duration_s.count() << "s" << std::cout.widen('\n');
 
     return 0;
 }
@@ -128,7 +145,7 @@ Color ray_color(const Ray &r, Hitable *world, int depth)
 
         Color emitted = rec.mat_ptr->emitted(rec.u, rec.v, rec.p);
 
-        if (depth < 5 && rec.mat_ptr->scatter(r, rec, attenuation, scattered))
+        if (depth < 2 && rec.mat_ptr->scatter(r, rec, attenuation, scattered))
         {
             return emitted + attenuation * ray_color(scattered, world, depth + 1);
         }
@@ -309,4 +326,49 @@ Hitable* cornell_box()
     list[i++] = new ConstantMedium(b2, 0.01f, new ConstantTexture(Color(0.0f, 0.0f, 0.0f)));
 
     return new HitableList(list, i);
+}
+
+
+Hitable* light_spheres()
+{
+    auto **list = new Hitable*[1000];
+    auto idx = std::size_t(0);
+
+    // Top light
+    list[idx++] = new XZ_Rect(-20, 20, -20, 20, 40, new DiffuseLight(new ConstantTexture(Color(0.02f))));
+
+    // Lights
+    for (std::size_t i=0; i<10; ++i)
+    {
+        auto light_color = Color(dist(m) * 10.0f + 20.0f);
+        auto light_material = new DiffuseLight(new ConstantTexture(light_color));
+        auto position = Vec3(
+                (dist(m) * 20.0f) - 5.0f,
+                dist(m) * 2.0f + 0.2f,
+                (dist(m) * 20.0f) - 5.0f
+        );
+        list[idx++] = new Sphere(position, 0.25f, light_material);
+    }
+
+    // Plane
+    list[idx++] = new XZ_Rect(-100, 100, -100, 100, 0, new Lambertian(new ConstantTexture(Color(0.6f, 0.6f, 0.6f))));
+
+    // Spheres
+    for(std::size_t i=0; i<200; ++i)
+    {
+        auto sphere_color = Color(
+                dist(m) * 0.7f + 0.2f,
+                dist(m) * 0.7f + 0.2f,
+                dist(m) * 0.7f + 0.2f
+        );
+        auto sphere_material = new Metal(sphere_color, dist(m) * 0.5f + 0.25f);
+        auto position = Vec3(
+                (dist(m) * 30.0f) - 10.0f,
+                (dist(m) * 4.0f) + 1.0f,
+                (dist(m) * 30.0f) - 10.0f
+        );
+        list[idx++] = new Sphere(position, dist(m) * 1.0f + 0.1f, sphere_material);
+    }
+
+    return new HitableList(list, idx);
 }

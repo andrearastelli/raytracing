@@ -15,12 +15,12 @@ private:
     float k;
 
 public:
-    XY_Rect() = default;
+    XY_Rect(): x0{-1.0f}, y0{-1.0f}, x1{1.0f}, y1{1.0f}, k{0}, material{nullptr} {};
     XY_Rect(float x0, float x1, float y0, float y1, float k, Material *material)
             : x0(x0), x1(x1), y0(y0), y1(y1), k(k), material(material) {}
 
-    virtual bool hit(const Ray &r, float t0, float t1, HitRecord &rec) const;
-    virtual bool bounding_box(float t0, float t1, AABB &box) const;
+    bool hit(const Ray &r, float t0, float t1, HitRecord &rec) const override;
+    bool bounding_box(float t0, float t1, AABB &box) const override;
 
 };
 
@@ -66,12 +66,12 @@ private:
     float k;
 
 public:
-    XZ_Rect() = default;
+    XZ_Rect(): x0{-1.0f}, z0{-1.0f}, x1{1.0f}, z1{1.0f}, k{0}, material{nullptr} {};
     XZ_Rect(float x0, float x1, float z0, float z1, float k, Material *material)
             : x0(x0), x1(x1), z0(z0), z1(z1), k(k), material(material) {}
 
-    virtual bool hit(const Ray &r, float t0, float t1, HitRecord &rec) const;
-    virtual bool bounding_box(float t0, float t1, AABB &box) const;
+    bool hit(const Ray &r, float t0, float t1, HitRecord &rec) const override;
+    bool bounding_box(float t0, float t1, AABB &box) const override;
 
 };
 
@@ -117,12 +117,12 @@ private:
     float k;
 
 public:
-    YZ_Rect() = default;
+    YZ_Rect(): y0{-1.0f}, z0{-1.0f}, y1{1.0f}, z1{1.0f}, k{0}, material{nullptr} {};
     YZ_Rect(float y0, float y1, float z0, float z1, float k, Material *material)
             : y0(y0), y1(y1), z0(z0), z1(z1), k(k), material(material) {}
 
-    virtual bool hit(const Ray &r, float t0, float t1, HitRecord &rec) const;
-    virtual bool bounding_box(float t0, float t1, AABB &box) const;
+    bool hit(const Ray &r, float t0, float t1, HitRecord &rec) const override;
+    bool bounding_box(float t0, float t1, AABB &box) const override;
 
 };
 
