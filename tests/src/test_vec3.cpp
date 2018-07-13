@@ -2,14 +2,6 @@
 #include "gtest/gtest.h"
 
 
-class TestVec3 : public ::testing::TestWithParam<Vec3>
-{
-public:
-    void SetUp() override {}
-    void TearDown() override {}
-};
-
-
 TEST(test_vec3, vec3_init_zero)
 {
     auto v = Vec3();
@@ -63,6 +55,13 @@ TEST(test_vec3, vec3_multiplication)
     EXPECT_EQ(v3[1], 0.0f);
     EXPECT_EQ(v3[2], 0.0f);
 }
+
+class TestVec3 : public ::testing::TestWithParam<Vec3>
+{
+public:
+    void SetUp() override {}
+    void TearDown() override {}
+};
 
 auto dot_product_values = ::testing::Values(
         Vec3(1.0f, 1.0f, 1.0f)
