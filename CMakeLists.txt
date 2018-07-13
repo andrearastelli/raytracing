@@ -13,11 +13,10 @@ endif(MSVC)
 
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_HOME_DIRECTORY}/bin")
 
-include_directories(${CMAKE_SOURCE_DIR}/src)
-
 add_subdirectory(ext/googletest)
 
 add_subdirectory(src)
+include_directories(${CMAKE_SOURCE_DIR}/src)
 
 target_compile_features(raytracing PUBLIC cxx_std_17)
 
@@ -31,5 +30,5 @@ foreach(_test_file ${TEST_SRC_FILES})
     add_executable(${_test_name} ${_test_file})
     add_dependencies(${_test_name} gtest)
     target_link_libraries(${_test_name} gtest gtest_main ${CMAKE_THREAD_LIBS_INIT})
-    add_test(${_test_name} ${_test_name})
+    add_test(NAME ${_test_name} COMMAND ${_test_name} WORKING_DIRECTORY "${CMAKE_HOME_DIRECTORY}/bin")
 endforeach()
