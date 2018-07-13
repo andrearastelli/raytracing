@@ -11,8 +11,9 @@ install:
   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 90
 
 script:
-  - cmake -H. -Bbuild
+  - mkdir build
   - cd build
+  - cmake ..
   - cmake --build .
   - ctest -V --build-exe-dir=../bin
   - cd ..
