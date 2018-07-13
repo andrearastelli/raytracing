@@ -9,7 +9,10 @@ configuration:
 #  - Release # Removed due to duplication and longer time for completing the tests.
 
 before_build:
-  - cmake -H. -Bbuild -A%PLATFORM%
+  - mkdir build
+  - cd build
+  - cmake . --build -A%PLATFORM%
+  - ctest -V ..\
 
 build:
   project: build\raytracing.sln
@@ -17,8 +20,5 @@ build:
   verbosity: normal
 
 test_script:
-  - cd build
-  - ctest -V
-  - cd ..
   - cp .\resource\sample_texture.jpg .
   - .\bin\%CONFIGURATION%\raytracing.exe --samples=8 --width=4 --height=2
