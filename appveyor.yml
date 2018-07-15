@@ -8,6 +8,9 @@ configuration:
   - Debug
 #  - Release # Removed due to duplication and longer time for completing the tests.
 
+install:
+  - git submodule update --init --recursive
+
 before_build:
   - mkdir build
   - cd build
