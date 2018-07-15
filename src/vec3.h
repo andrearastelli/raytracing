@@ -76,7 +76,7 @@ const Vec3 Vec3::ZERO = { 0.0f, 0.0f, 0.0f };
 
 std::ostream& operator<<(std::ostream &os, const Vec3 &t)
 {
-	os << t.x() << t.y() << t.z();
+	os << "[" << t.x() << ", " << t.y() << ", " << t.z() << "]";
 	return os;
 }
 
@@ -133,8 +133,8 @@ Vec3 operator/(const Vec3 &v, float t)
 
 float dot(const Vec3 &v1, const Vec3 &v2)
 {
-    auto mul = v1 * v1;
-    auto res = _mm_cvtss_f32(mul.v);
+    auto mul = v1 * v2;
+    auto res = mul.v_f[0] + mul.v_f[1] + mul.v_f[2];
 	return res;
 }
 
@@ -143,12 +143,13 @@ Vec3 cross(const Vec3 &v1, const Vec3 &v2)
 {
     auto res = _mm_sub_ps(
             _mm_mul_ps(
-                    _mm_shuffle_ps(v1.v, v1.v, _MM_SHUFFLE(1, 2, 0, 3)),
-                    _mm_shuffle_ps(v2.v, v2.v, _MM_SHUFFLE(2, 0, 1, 3))),
+                    _mm_shuffle_ps(v1.v, v1.v, _MM_SHUFFLE(3, 0, 2, 1)),
+                    _mm_shuffle_ps(v2.v, v2.v, _MM_SHUFFLE(3, 1, 0, 2))
+            ),
             _mm_mul_ps(
-                    _mm_shuffle_ps(v1.v, v1.v, _MM_SHUFFLE(2, 0, 1, 3)),
-                    _mm_shuffle_ps(v2.v, v2.v, _MM_SHUFFLE(1, 2, 0, 3)))
-    );
+                    _mm_shuffle_ps(v1.v, v1.v, _MM_SHUFFLE(3, 1, 0, 2)),
+                    _mm_shuffle_ps(v2.v, v2.v, _MM_SHUFFLE(3, 0, 2, 1))
+            ));
 
     return Vec3(res);
 }
