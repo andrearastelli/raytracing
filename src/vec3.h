@@ -5,7 +5,11 @@
 #include <array>
 #include <cmath>
 
+#ifdef MSVC
+#include <intrin.h>
+#else
 #include <x86intrin.h>
+#endif
 
 class Vec3
 {
