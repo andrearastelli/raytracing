@@ -13,7 +13,7 @@ endif(MSVC)
 
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_HOME_DIRECTORY}/bin")
 
-add_subdirectory(ext/googletest)
+add_subdirectory(ext/googletest/googletest)
 
 add_subdirectory(src)
 include_directories(${CMAKE_SOURCE_DIR}/src)
