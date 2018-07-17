@@ -11,13 +11,12 @@
 #include <x86intrin.h>
 #endif
 
-class Vec3
+__attribute__((aligned(16))) class Vec3
 {
 
 public:
     union {
-        //float v_f[4] __attribute__((aligned(0x1000)));
-        struct { float x, y, z; } __attribute__((aligned(0x1000)));
+        struct { float _x, _y, _z; };
         __m128 v;
     };
 
@@ -29,37 +28,35 @@ public:
     static const Vec3 ZERO;
 
 public:
-    Vec3() { _mm_setzero_ps(); }
-    Vec3(float x, float y, float z, float w=0.0f) { _mm_set_ps(w, z, y, x); }
-    explicit Vec3(__m128 v) : v{v} {}
+    Vec3() : v{_mm_setzero_ps()} {}
+    Vec3(float x, float y, float z, float w=0.0f) : v{_mm_set_ps(w, z, y, x)} {}
+    Vec3(__m128 v) : v{v} {}
 
-    //float x() const { float v_f[4]{0}; _mm_storeu_ps(v_f, v); return v_f[0]; }
-    //float y() const { float v_f[4]{0}; _mm_storeu_ps(v_f, v); return v_f[1]; }
-    //float z() const { float v_f[4]{0}; _mm_storeu_ps(v_f, v); return v_f[2]; }
+    float x() const { return _x; }
+    float y() const { return _y; }
+    float z() const { return _z; }
 	
 	const Vec3& operator+() const { return *this; }
-	Vec3 operator-() const { return Vec3(_mm_mul_ps(v, _mm_set1_ps(-1))); }
+	Vec3 operator-() const { return _mm_mul_ps(v, _mm_set1_ps(-1)); }
 	float operator[](int i) const {
         switch (i)
         {
-            case 0: return x;
-            case 1: return y;
-            case 2: return z;
+            case 0: return _x;
+            case 1: return _y;
+            case 2: return _z;
         }
         auto error_text = "Index [" + std::to_string(i) + "] value not allowed.";
         throw std::runtime_error(error_text);
-        // return v_f[3-i];
     }
     float& operator[](int i) {
         switch (i)
         {
-            case 0: return x;
-            case 1: return y;
-            case 2: return z;
+            case 0: return _x;
+            case 1: return _y;
+            case 2: return _z;
         }
         auto error_text = "Index [" + std::to_string(i) + "] value not allowed.";
         throw std::runtime_error(error_text);
-        // return v_f[3-i];
      }
 	
 	Vec3& operator+=(const Vec3 &v1);
@@ -77,10 +74,10 @@ public:
 	
 	float squared_length() const 
 	{
-	    float v_f[4]{0};
 	    auto res = _mm_mul_ps(v, v);
-	    _mm_store_ps(v_f, res);
-		return v_f[0] + v_f[1] + v_f[2];
+	    res = _mm_hadd_ps(res, res);
+	    res = _mm_hadd_ps(res, res);
+		return res[0];
 	}
 	
 	void normalize();
@@ -98,71 +95,27 @@ const Vec3 Vec3::ZERO = { 0.0f, 0.0f, 0.0f };
 std::ostream& operator<<(std::ostream &os, const Vec3 &t)
 {
 	// os << "[" << t.x() << ", " << t.y() << ", " << t.z() << "]";
-    os << "[" << t.x << ", " << t.y << ", " << t.z << "]";
+    os << "[" << t._x << ", " << t._y << ", " << t._z << "]";
 	return os;
 }
 
 
-Vec3 operator+(const Vec3 &v1, const Vec3 &v2)
-{
-    auto res = _mm_add_ps(v1.v, v2.v);
-	return Vec3(res);
-}
+Vec3 operator+(const Vec3 &v1, const Vec3 &v2) { return _mm_add_ps(v1.v, v2.v); }
+Vec3 operator-(const Vec3 &v1, const Vec3 &v2) { return _mm_sub_ps(v1.v, v2.v); }
+Vec3 operator*(const Vec3 &v1, const Vec3 &v2) { return _mm_mul_ps(v1.v, v2.v); }
+Vec3 operator/(const Vec3 &v1, const Vec3 &v2) { return _mm_div_ps(v1.v, v2.v); }
 
-
-Vec3 operator-(const Vec3 &v1, const Vec3 &v2)
-{
-    auto res = _mm_sub_ps(v1.v, v2.v);
-	return Vec3(res);
-}
-
-
-Vec3 operator*(const Vec3 &v1, const Vec3 &v2)
-{
-    auto res = _mm_mul_ps(v1.v, v2.v);
-	return Vec3(res);
-}
-
-
-Vec3 operator/(const Vec3 &v1, const Vec3 &v2)
-{
-    auto res = _mm_div_ps(v1.v, v2.v);
-	return Vec3(res);
-}
-
-
-Vec3 operator*(const Vec3 &v, float t)
-{
-    auto t_vec = _mm_set1_ps(t);
-    auto res = _mm_mul_ps(v.v, t_vec);
-	return Vec3(res);
-}
-
-
-Vec3 operator*(float t, const Vec3 &v)
-{
-    return v * t;
-}
-
-
-Vec3 operator/(const Vec3 &v, float t)
-{
-    auto t_vec = _mm_set1_ps(t);
-    auto res = _mm_div_ps(v.v, t_vec);
-	return Vec3(res);
-}
-
+Vec3 operator*(const Vec3 &v, float t) { return _mm_mul_ps(v.v, _mm_set1_ps(t)); }
+Vec3 operator*(float t, const Vec3 &v) { return v * t; }
+Vec3 operator/(const Vec3 &v, float t) { return _mm_div_ps(v.v, _mm_set1_ps(t)); }
 
 float dot(const Vec3 &v1, const Vec3 &v2)
 {
     auto mul = v1 * v2;
-    // auto res = mul.v_f[0] + mul.v_f[1] + mul.v_f[2];
-    // auto res = _mm_cvtss_f32(_mm_dp_ps(v1.v, v2.v, 0x71));
     auto res = _mm_hadd_ps(mul.v, mul.v);
     res = _mm_hadd_ps(res, res);
 	return res[0];
 }
-
 
 Vec3 cross(const Vec3 &v1, const Vec3 &v2)
 {
@@ -225,12 +178,18 @@ Vec3& Vec3::operator/=(const float t)
 void Vec3::normalize()
 {
     float k = length();
+    if (k == 0)
+    {
+        v = _mm_setzero_ps();
+        return;
+    }
     v = _mm_div_ps(v, _mm_set1_ps(k));
 }
 
 
 Vec3 unit_vector(Vec3 v)
 {
+    if (v.length() == 0.0f) return Vec3();
     return v / v.length();
 }
 
