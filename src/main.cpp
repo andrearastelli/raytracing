@@ -40,10 +40,10 @@ int main(int argc, char *argv[])
 
     auto samples = input_data.samples;
 
-    //Hitable *world = random_scene();
+    Hitable *world = random_scene();
     //Hitable *world = test_perlin();
     //Hitable *world = cornell_box();
-    Hitable *world = light_spheres();
+    //Hitable *world = light_spheres();
 
     auto lookfrom = Vec3{10.0f, 20.0f, 10.0f};
     auto lookat = Vec3{0.0f, 0.0f, 0.0f};
@@ -243,11 +243,6 @@ Hitable* random_scene()
 }
 
 
-/**
- * @brief
- *
- * @return Hitable*
- */
 Hitable* test_perlin()
 {
     auto **list = new Hitable*[2];
@@ -259,11 +254,6 @@ Hitable* test_perlin()
 }
 
 
-/**
- * @brief
- *
- * @return Hitable*
- */
 Hitable* simple_light()
 {
     Texture *noiseText = new NoiseTexture(4);
@@ -278,11 +268,6 @@ Hitable* simple_light()
 }
 
 
-/**
- * @brief
- *
- * @return Hitable*
- */
 Hitable* cornell_box()
 {
     Hitable **list = new Hitable*[1000];

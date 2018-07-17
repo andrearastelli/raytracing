@@ -132,6 +132,7 @@ RotateY::RotateY(Hitable *p, float angle) : ptr(p)
         for (auto j=0; j<2; ++j)
             for (auto k=0; k<2; ++k)
             {
+                // TOODO: this can be SIMDed - needs more check.
                 auto x = i * bbox.max().x() + (1 - i) * bbox.min().x();
                 auto y = j * bbox.max().y() + (1 - j) * bbox.min().y();
                 auto z = k * bbox.max().z() + (1 - k) * bbox.min().z();
