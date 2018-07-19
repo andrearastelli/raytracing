@@ -11,7 +11,7 @@
 #include <x86intrin.h>
 #endif
 
-__attribute__((aligned(16))) class Vec3
+class Vec3
 {
 
 public:
@@ -35,7 +35,7 @@ public:
     float x() const { return _x; }
     float y() const { return _y; }
     float z() const { return _z; }
-	
+
 	const Vec3& operator+() const { return *this; }
 	Vec3 operator-() const { return _mm_mul_ps(v, _mm_set1_ps(-1)); }
 	float operator[](int i) const {
@@ -44,9 +44,8 @@ public:
             case 0: return _x;
             case 1: return _y;
             case 2: return _z;
+            default: return _z;
         }
-        auto error_text = "Index [" + std::to_string(i) + "] value not allowed.";
-        throw std::runtime_error(error_text);
     }
     float& operator[](int i) {
         switch (i)
@@ -54,32 +53,33 @@ public:
             case 0: return _x;
             case 1: return _y;
             case 2: return _z;
+            default: return _z;
         }
-        auto error_text = "Index [" + std::to_string(i) + "] value not allowed.";
-        throw std::runtime_error(error_text);
      }
-	
+
 	Vec3& operator+=(const Vec3 &v1);
 	Vec3& operator-=(const Vec3 &v1);
 	Vec3& operator*=(const Vec3 &v1);
 	Vec3& operator/=(const Vec3 &v1);
-	
+
 	Vec3& operator*=(float t);
 	Vec3& operator/=(float t);
-	
-	float length() const 
+
+	float length() const
 	{
 		return std::sqrt(squared_length());
 	}
-	
-	float squared_length() const 
+
+	float squared_length() const
 	{
 	    auto res = _mm_mul_ps(v, v);
 	    res = _mm_hadd_ps(res, res);
 	    res = _mm_hadd_ps(res, res);
-		return res[0];
+        float v_f[4]{0};
+        _mm_store1_ps(v_f, res);
+		return v_f[0];
 	}
-	
+
 	void normalize();
 
 };
@@ -114,7 +114,9 @@ float dot(const Vec3 &v1, const Vec3 &v2)
     auto mul = v1 * v2;
     auto res = _mm_hadd_ps(mul.v, mul.v);
     res = _mm_hadd_ps(res, res);
-	return res[0];
+    float v_f[4]{0};
+    _mm_store1_ps(v_f, res);
+	return v_f[0];
 }
 
 Vec3 cross(const Vec3 &v1, const Vec3 &v2)
