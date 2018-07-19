@@ -7,13 +7,14 @@
 # Raytracing in One Weekend and beyond
 
 ## 1.0.0
-![Imgur](resource/render_0001.png)
+![Imgur](resource/render_0003.png)
 
 Image info:
-- 48 spheres (ground + 3 main spheres + 44 small spheres)
-- 800 x 400 pixel of resolution
-- 8 samples per pixel
-- 122.880.000 rays fired to generate the image.
+- Cornell Box with volumes and textures
+- Total rendering time 216s (on windows)
+- Samples per pixel 128
+- Image resolution 400x400 px
+- Single thread / SIMD instruction
 
 > In the current image, with the current sample count, will be extremely diffucult to identify metal from lambert materials, but with a higher (and most reasonable) sample count, let's say 128 or even 64, the total amount of rays generated will be 1.966.080.000, almost 2 Billion (128 sample, with 64 will be 1 Billion), and for a single threaded application this may be a little overkill.
 

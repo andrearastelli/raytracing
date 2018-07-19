@@ -6,7 +6,7 @@
 #include <cmath>
 
 #if defined(_MSC_VER)
-#include <intrin.h>
+#include <immintrin.h>
 #else
 #include <x86intrin.h>
 #endif
