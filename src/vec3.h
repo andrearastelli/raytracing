@@ -11,7 +11,7 @@
 #include <x86intrin.h>
 #endif
 
-class Vec3
+class alignas(16) Vec3
 {
 
 public:
