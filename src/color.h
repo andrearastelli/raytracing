@@ -10,15 +10,24 @@
 #include <fstream>
 #include <iostream>
 
+#if defined(_MSC_VER)
+#include <immintrin.h>
+#else
+#include <x86intrin.h>
+#endif
 
-class Color
+
+class alignas(16) Color
 {
 
-private:
+public:
     /**
      * The internal color representation.
      */
-    std::array<float, 3> c;
+    union {
+        struct { float _r, _g, _b; };
+        __m128 v;
+    };
 
 public:
     /**
@@ -26,7 +35,7 @@ public:
      *
      * Will create a black color.
      */
-    Color() : c{0, 0, 0} {}
+    Color() : v{_mm_setzero_ps()} {}
 
     /**
      * Color int constructor.
@@ -38,7 +47,7 @@ public:
      * @param g Green component.
      * @param b Blue component.
      */
-    Color(int r, int g, int b): c{r / 255.0f, g / 255.0f, b / 255.0f} {}
+    Color(int r, int g, int b, int alpha=255): v{_mm_set_ps(alpha/255.0f, b/255.0f, g/255.0f, r/255.0f)} {}
 
     /**
      * Color float constructor.
@@ -50,45 +59,49 @@ public:
      * @param g Green component.
      * @param b Blue component.
      */
-    Color(float r, float g, float b): c{r, g, b} {}
+    Color(float r, float g, float b): v{_mm_set_ps(0, b, g, r)} {}
 
     /**
      * @brief Construct a new Color object
      * 
-     * @param v 
+     * @param v Vec3 object
      */
-    Color(const Vec3 &v): c{v.x(), v.y(), v.z()} {}
+    Color(const Vec3 &_v): v{_v.v} {}
 
     /**
      * @brief Construct a new Color object using single value to fill RGB color.
      * 
      * @param c float value used to define all RGB component of this color.
      */
-    explicit Color(float gray) : c{gray, gray, gray} {}
+    explicit Color(float gray, float alpha=0.0f) : v{_mm_set1_ps(gray)} {}
+
+    /**
+     * @brief Construct a color from a SIMD object.
+     *
+     * @param _v SIMD object.
+     */
+    explicit Color(__m128 _v) : v{_v} {}
 
     /**
      * @brief Destroy the Color object
-     * 
      */
     ~Color() = default;
 
 
-    inline float r() const { return c[0]; }
-    inline float g() const { return c[1]; }
-    inline float b() const { return c[2]; }
+    float r() const { return _r; }
+    float g() const { return _g; }
+    float b() const { return _b; }
 
-    inline Color& operator+=(const Color &a);
-    inline Color& operator/=(float a);
+    Color& operator+=(const Color &a);
+    Color& operator/=(float a);
 
-    inline Color& gamma();
+    Color& gamma();
 };
 
 
 Color& Color::operator+=(const Color &a)
 {
-    c[0] += a.r();
-    c[1] += a.g();
-    c[2] += a.b();
+    v = _mm_add_ps(v, a.v);
 
     return *this;
 }
@@ -96,9 +109,7 @@ Color& Color::operator+=(const Color &a)
 
 Color& Color::operator/=(float a)
 {
-    c[0] /= a;
-    c[1] /= a;
-    c[2] /= a;
+    v = _mm_div_ps(v, _mm_set1_ps(a));
 
     return *this;
 }
@@ -109,9 +120,9 @@ Color& Color::gamma()
     //c[0] = std::sqrt(c[0]);
     //c[1] = std::sqrt(c[1]);
     //c[2] = std::sqrt(c[2]);
-    c[0] = std::pow(c[0], 0.4545454545454545f);
-    c[1] = std::pow(c[1], 0.4545454545454545f);
-    c[2] = std::pow(c[2], 0.4545454545454545f);
+    _r = std::pow(_r, 0.4545454545454545f);
+    _g = std::pow(_g, 0.4545454545454545f);
+    _b = std::pow(_b, 0.4545454545454545f);
 
     return *this;
 }
@@ -156,13 +167,13 @@ inline std::ofstream& operator<<(std::ofstream &ofs, const Color &color)
 
 inline Color operator*(const Color &c1, const Color &c2)
 {
-	return Color(c1.r()*c2.r(), c1.g()*c2.g(), c1.b()*c2.b());
+	return Color(_mm_mul_ps(c1.v, c2.v));
 }
 
 
 inline Color operator*(float t, const Color &c)
 {
-    return {t * c.r(), t * c.g(), t * c.b()};
+    return Color(_mm_mul_ps(c.v, _mm_set1_ps(t)));
 }
 
 
@@ -174,7 +185,7 @@ inline Color operator*(const Color &c, float t)
 
 inline Color operator+(const Color &a, const Color &b)
 {
-    return {a.r() + b.r(), a.g() + b.g(), a.b() + b.b()};
+    return Color(_mm_add_ps(a.v, b.v));
 }
 
 
