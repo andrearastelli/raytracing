@@ -23,6 +23,8 @@ build:
   verbosity: normal
 
 test_script:
+  - ls ./*
+  - dir *
   - ctest -V
   - cp .\resource\sample_texture.jpg .
   - .\bin\%CONFIGURATION%\raytracing.exe --samples=8 --width=4 --height=2
