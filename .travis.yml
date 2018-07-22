@@ -15,7 +15,8 @@ script:
   - cd build
   - cmake ..
   - cmake --build .
-  - ctest -V
   - cd ..
+  - ./bin/test_vec3
+  - ./bin/test_color
   - cp ./resource/sample_texture.jpg .
   - ./bin/raytracing --samples=8 --width=4 --height=2
