@@ -74,7 +74,7 @@ public:
 	float squared_length() const
 	{
 	    auto res = _mm_mul_ps(v, v);
-        if (CPUInfo().HW_SSE3)
+        if (false)
         {
             res = _mm_hadd_ps(res, res);
             res = _mm_hadd_ps(res, res);
