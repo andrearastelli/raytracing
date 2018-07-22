@@ -21,6 +21,7 @@ set(SRC
     rect.h
     constantmedium.h
     box.h
+    simd.h
 )
 
 add_executable(
