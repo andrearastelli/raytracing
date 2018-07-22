@@ -4,6 +4,7 @@
 #include <iostream>
 #include <array>
 #include <cmath>
+#include "simd.h"
 
 #if defined(_MSC_VER)
 #include <immintrin.h>
@@ -73,8 +74,16 @@ public:
 	float squared_length() const
 	{
 	    auto res = _mm_mul_ps(v, v);
-	    res = _mm_hadd_ps(res, res);
-	    res = _mm_hadd_ps(res, res);
+        if (CPUInfo().HW_SSE3)
+        {
+            res = _mm_hadd_ps(res, res);
+            res = _mm_hadd_ps(res, res);
+        } else {
+            float _f[4]{0};
+            _mm_store_ps(_f, res);
+            _mm_set1_ps(_f[0] + _f[1] + _f[2] + _f[3]);
+        }
+
         float v_f[4]{0};
         _mm_store1_ps(v_f, res);
 		return v_f[0];
