@@ -16,6 +16,8 @@ script:
   - cmake ..
   - cmake --build .
   - cd ..
+  - tree
+  - ls ./*
   - ./bin/test_vec3
   - ./bin/test_color
   - cp ./resource/sample_texture.jpg .
