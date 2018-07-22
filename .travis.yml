@@ -8,6 +8,7 @@ before_install:
 
 install:
   - sudo apt-get install -qq g++-7
+  - sudo apt-get install tree
   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 90
 
 script:
