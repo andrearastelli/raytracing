@@ -2,6 +2,8 @@
 #define RAYTRACING_SIMD_H
 
 #ifdef _WIN32
+#include <windows.h>
+#include <immintrin.h>
 #define cpuid(info, x) __cpuidex(info, x, 0)
 #else
 #include <cpuid.h>
@@ -10,7 +12,8 @@ void cpuid(unsigned info[4], unsigned InfoType) {
 }
 #endif
 
-struct CPUInfo{
+struct CPUInfo
+{
 //  Misc.
     bool HW_MMX;
     bool HW_x64;
