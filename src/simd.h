@@ -3,7 +3,9 @@
 
 #ifdef _WIN32
 #include <windows.h>
-#include <immintrin.h>
+#undef min
+#undef max
+#undef small
 #define cpuid(info, x) __cpuidex(info, x, 0)
 #else
 #include <cpuid.h>
