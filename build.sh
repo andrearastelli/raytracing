@@ -6,5 +6,5 @@ fi
 
 cd build
 
-cmake -Wdev ../
-cmake --build .
+cmake -DGTEST_LINKED_AS_SHARED_LIBRARY=1 -Wdev ../
+cmake -DGTEST_LINKED_AS_SHARED_LIBRARY=1 --build .
