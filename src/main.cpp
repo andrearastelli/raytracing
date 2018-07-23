@@ -33,53 +33,8 @@ Hitable* cornell_box();
 Hitable* light_spheres();
 
 
-void checkHardwareProperties()
-{
-    auto info = CPUInfo();
-
-    std::cout << "CPU INFO." << std::endl;
-    std::cout << "mmx: " << info.is_mmx() << std::endl;
-    std::cout << "x64: " << info.is_x64() << std::endl;
-    std::cout << "abm: " << info.is_abm() << std::endl;
-    std::cout << "rdrand: " << info.is_rdrand() << std::endl;
-    std::cout << "bmi1: " << info.is_bmi1() << std::endl;
-    std::cout << "bmi2: " << info.is_bmi2() << std::endl;
-    std::cout << "adx: " << info.is_adx() << std::endl;
-    std::cout << "prefetchwt1: " << info.is_prefetchwt1() << std::endl;
-    std::cout << "sse: " << info.is_sse() << std::endl;
-    std::cout << "sse2: " << info.is_sse2() << std::endl;
-    std::cout << "sse3: " << info.is_sse3() << std::endl;
-    std::cout << "ssse3: " << info.is_ssse3() << std::endl;
-    std::cout << "sse41: " << info.is_sse41() << std::endl;
-    std::cout << "sse42: " << info.is_sse42() << std::endl;
-    std::cout << "sse4a: " << info.is_sse4a() << std::endl;
-    std::cout << "aes: " << info.is_aes() << std::endl;
-    std::cout << "sha: " << info.is_sha() << std::endl;
-    std::cout << "avx: " << info.is_avx() << std::endl;
-    std::cout << "xop: " << info.is_xop() << std::endl;
-    std::cout << "fma3: " << info.is_fma3() << std::endl;
-    std::cout << "fma4: " << info.is_fma4() << std::endl;
-    std::cout << "avx2: " << info.is_avx2() << std::endl;
-    std::cout << "avx512f: " << info.is_avx512f() << std::endl;
-    std::cout << "avx512cd: " << info.is_avx512cd() << std::endl;
-    std::cout << "avx512pf: " << info.is_avx512pf() << std::endl;
-    std::cout << "avx512er: " << info.is_avx512er() << std::endl;
-    std::cout << "avx512vl: " << info.is_avx512vl() << std::endl;
-    std::cout << "avx512bw: " << info.is_avx512bw() << std::endl;
-    std::cout << "avx512dq: " << info.is_avx512dq() << std::endl;
-    std::cout << "avx512ifma: " << info.is_avx512ifma() << std::endl;
-    std::cout << "avx512vbmi: " << info.is_avx512vbmi() << std::endl;
-
-
-
-}
-
-
 int main(int argc, char *argv[])
 {
-    checkHardwareProperties();
-    return 0;
-
     auto input_data = parser(argc, argv);
 
     Image image(input_data.output_path, input_data.width, input_data.height);
@@ -191,7 +146,7 @@ Color ray_color(const Ray &r, Hitable *world, int depth)
 
         Color emitted = rec.mat_ptr->emitted(rec.u, rec.v, rec.p);
 
-        if (depth < 2 && rec.mat_ptr->scatter(r, rec, attenuation, scattered))
+        if (depth < 20 && rec.mat_ptr->scatter(r, rec, attenuation, scattered))
         {
             return emitted + attenuation * ray_color(scattered, world, depth + 1);
         }
@@ -316,39 +271,29 @@ Hitable* simple_light()
 
 Hitable* cornell_box()
 {
-    Hitable **list = new Hitable*[1000];
-    int i = 0;
+    Hitable **list = new Hitable*[8];
+    std::size_t i = 0;
 
-    auto c_red = Color(1.0f, 0.0f, 0.0f);
     auto c_green = Color(0.0f, 1.0f, 0.0f);
     auto c_white = Color(0.8f, 0.8f, 0.8f);
-    auto c_yellow = Color(1.0f, 1.0f, 0.0f);
 
-    Material *red = new Lambertian(new ConstantTexture(c_red));
     int nx, ny, nn;
     auto file_path = "sample_texture.jpg";
     unsigned char *texture_data = stbi_load(file_path, &nx, &ny, &nn, 0);
     Material *image = new Lambertian(new ImageTexture(texture_data, nx, ny));
     Material *white = new Lambertian(new ConstantTexture(c_white));
     Material *green = new Lambertian(new ConstantTexture(c_green));
-    Material *yellow = new Lambertian(new ConstantTexture(c_yellow));
 
-    Material *light = new DiffuseLight(new ConstantTexture(Color(1.0f)));
+    Material *light = new DiffuseLight(new ConstantTexture(Color{1.0f, .0f}));
 
     list[i++] = new FlipNormals(new YZ_Rect(0, 555, 0, 555, 555, green));
     list[i++] = new YZ_Rect(0, 555, 0, 555, 0, image);
 
-    //list[i++] = new RotateY(new YZ_Rect(0, 555, 0, 555, 555, green), 90.0f);
-
-    //list[i++] = new XZ_Rect(213, 343, 227, 332, 554, light);
     list[i++] = new XZ_Rect(50, 505, 50, 505, 554, light);
 
     list[i++] = new FlipNormals(new XZ_Rect(0, 555, 0, 555, 555, white));
     list[i++] = new XZ_Rect(0, 555, 0, 555, 0, white);
     list[i++] = new FlipNormals(new XY_Rect(0, 555, 0, 555, 555, white));
-
-    // list[i++] = new Translate(new Box(Vec3(0, 0, 0), Vec3(165, 165, 165), white), Vec3(130,0,65));
-    // list[i++] = new Translate(new Box(Vec3(0, 0, 0), Vec3(165, 330, 165), white), Vec3(265,0,295));
 
     auto *b1 = new Translate(new Box(Vec3(0, 0, 0), Vec3(165, 330, 165), white), Vec3(265,0,295));
     list[i++] = new ConstantMedium(b1, 0.01f, new ConstantTexture(Color(1.0f, 1.0f, 1.0f)));
@@ -371,7 +316,7 @@ Hitable* light_spheres()
     // Lights
     for (std::size_t i=0; i<10; ++i)
     {
-        auto light_color = Color(dist(m) * 10.0f + 20.0f);
+        auto light_color = Color(dist(m) * 10.0f + 20.0f, .0f);
         auto light_material = new DiffuseLight(new ConstantTexture(light_color));
         auto position = Vec3(
                 (dist(m) * 20.0f) - 5.0f,
