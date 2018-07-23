@@ -145,5 +145,43 @@ struct CPUInfo
 };
 
 
+void checkHardwareProperties()
+{
+    auto info = CPUInfo();
+
+    std::cout << "CPU INFO." << std::endl;
+    std::cout << "mmx: " << info.is_mmx() << std::endl;
+    std::cout << "x64: " << info.is_x64() << std::endl;
+    std::cout << "abm: " << info.is_abm() << std::endl;
+    std::cout << "rdrand: " << info.is_rdrand() << std::endl;
+    std::cout << "bmi1: " << info.is_bmi1() << std::endl;
+    std::cout << "bmi2: " << info.is_bmi2() << std::endl;
+    std::cout << "adx: " << info.is_adx() << std::endl;
+    std::cout << "prefetchwt1: " << info.is_prefetchwt1() << std::endl;
+    std::cout << "sse: " << info.is_sse() << std::endl;
+    std::cout << "sse2: " << info.is_sse2() << std::endl;
+    std::cout << "sse3: " << info.is_sse3() << std::endl;
+    std::cout << "ssse3: " << info.is_ssse3() << std::endl;
+    std::cout << "sse41: " << info.is_sse41() << std::endl;
+    std::cout << "sse42: " << info.is_sse42() << std::endl;
+    std::cout << "sse4a: " << info.is_sse4a() << std::endl;
+    std::cout << "aes: " << info.is_aes() << std::endl;
+    std::cout << "sha: " << info.is_sha() << std::endl;
+    std::cout << "avx: " << info.is_avx() << std::endl;
+    std::cout << "xop: " << info.is_xop() << std::endl;
+    std::cout << "fma3: " << info.is_fma3() << std::endl;
+    std::cout << "fma4: " << info.is_fma4() << std::endl;
+    std::cout << "avx2: " << info.is_avx2() << std::endl;
+    std::cout << "avx512f: " << info.is_avx512f() << std::endl;
+    std::cout << "avx512cd: " << info.is_avx512cd() << std::endl;
+    std::cout << "avx512pf: " << info.is_avx512pf() << std::endl;
+    std::cout << "avx512er: " << info.is_avx512er() << std::endl;
+    std::cout << "avx512vl: " << info.is_avx512vl() << std::endl;
+    std::cout << "avx512bw: " << info.is_avx512bw() << std::endl;
+    std::cout << "avx512dq: " << info.is_avx512dq() << std::endl;
+    std::cout << "avx512ifma: " << info.is_avx512ifma() << std::endl;
+    std::cout << "avx512vbmi: " << info.is_avx512vbmi() << std::endl;
+}
+
 
 #endif //RAYTRACING_SIMD_H
