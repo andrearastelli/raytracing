@@ -74,7 +74,7 @@ public:
 	float squared_length() const
 	{
 	    auto res = _mm_mul_ps(v, v);
-        if (false)
+        if (CPUInfo().is_sse3())
         {
             res = _mm_hadd_ps(res, res);
             res = _mm_hadd_ps(res, res);
@@ -121,7 +121,7 @@ Vec3 operator/(const Vec3 &v, float t) { return _mm_div_ps(v.v, _mm_set1_ps(t));
 float dot(const Vec3 &v1, const Vec3 &v2)
 {
     auto res = _mm_mul_ps(v1.v, v2.v);
-    if (false) {
+    if (CPUInfo().is_sse3()) {
         res = _mm_hadd_ps(res, res);
         res = _mm_hadd_ps(res, res);
     }
