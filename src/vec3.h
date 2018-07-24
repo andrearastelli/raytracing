@@ -74,19 +74,18 @@ public:
 	float squared_length() const
 	{
 	    auto res = _mm_mul_ps(v, v);
-        if (CPUInfo().is_sse3())
-        {
-            res = _mm_hadd_ps(res, res);
-            res = _mm_hadd_ps(res, res);
-        } else {
-            float _f[4]{0};
-            _mm_store_ps(_f, res);
-            res = _mm_set1_ps(_f[0] + _f[1] + _f[2] + _f[3]);
-        }
-
+        //if (CPUInfo().is_sse3())
+        //{
+        //    res = _mm_hadd_ps(res, res);
+        //    res = _mm_hadd_ps(res, res);
+        //} else {
+        //    float _f[4]{0};
+        //    _mm_store_ps(_f, res);
+        //    res = _mm_set1_ps(_f[0] + _f[1] + _f[2] + _f[3]);
+        //}
         float v_f[4]{0};
         _mm_store1_ps(v_f, res);
-		return v_f[0];
+		return v_f[0] + v_f[1] + v_f[2] + v_f[3];
 	}
 
 	void normalize();
@@ -103,7 +102,6 @@ const Vec3 Vec3::ZERO = { 0.0f, 0.0f, 0.0f };
 
 std::ostream& operator<<(std::ostream &os, const Vec3 &t)
 {
-	// os << "[" << t.x() << ", " << t.y() << ", " << t.z() << "]";
     os << "[" << t._x << ", " << t._y << ", " << t._z << "]";
 	return os;
 }
@@ -121,18 +119,18 @@ Vec3 operator/(const Vec3 &v, float t) { return _mm_div_ps(v.v, _mm_set1_ps(t));
 float dot(const Vec3 &v1, const Vec3 &v2)
 {
     auto res = _mm_mul_ps(v1.v, v2.v);
-    if (CPUInfo().is_sse3()) {
-        res = _mm_hadd_ps(res, res);
-        res = _mm_hadd_ps(res, res);
-    }
-    else {
-        float _f[4]{0};
-        _mm_store_ps(_f, res);
-        res = _mm_set1_ps(_f[0] + _f[1] + _f[2] + _f[3]);
-    }
+    //if (CPUInfo().is_sse3()) {
+    //    res = _mm_hadd_ps(res, res);
+    //    res = _mm_hadd_ps(res, res);
+    //}
+    //else {
+    //    float _f[4]{0};
+    //    _mm_store_ps(_f, res);
+    //    res = _mm_set1_ps(_f[0] + _f[1] + _f[2] + _f[3]);
+    //}
     float v_f[4]{0};
     _mm_store1_ps(v_f, res);
-	return v_f[0];
+	return v_f[0] + v_f[1] + v_f[2] + v_f[3];
 }
 
 Vec3 cross(const Vec3 &v1, const Vec3 &v2)
