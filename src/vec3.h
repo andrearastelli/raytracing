@@ -79,13 +79,13 @@ public:
         //    res = _mm_hadd_ps(res, res);
         //    res = _mm_hadd_ps(res, res);
         //} else {
-        //    float _f[4]{0};
-        //    _mm_store_ps(_f, res);
-        //    res = _mm_set1_ps(_f[0] + _f[1] + _f[2] + _f[3]);
+            float _f[4]{0};
+            _mm_store_ps(_f, res);
+            res = _mm_set1_ps(_f[0] + _f[1] + _f[2] + _f[3]);
         //}
         float v_f[4]{0};
         _mm_store1_ps(v_f, res);
-		return v_f[0] + v_f[1] + v_f[2] + v_f[3];
+		return v_f[0];
 	}
 
 	void normalize();
@@ -124,13 +124,13 @@ float dot(const Vec3 &v1, const Vec3 &v2)
     //    res = _mm_hadd_ps(res, res);
     //}
     //else {
-    //    float _f[4]{0};
-    //    _mm_store_ps(_f, res);
-    //    res = _mm_set1_ps(_f[0] + _f[1] + _f[2] + _f[3]);
+        float _f[4]{0};
+        _mm_store_ps(_f, res);
+        res = _mm_set1_ps(_f[0] + _f[1] + _f[2] + _f[3]);
     //}
     float v_f[4]{0};
     _mm_store1_ps(v_f, res);
-	return v_f[0] + v_f[1] + v_f[2] + v_f[3];
+	return v_f[0];
 }
 
 Vec3 cross(const Vec3 &v1, const Vec3 &v2)
