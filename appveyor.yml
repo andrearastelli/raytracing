@@ -24,7 +24,7 @@ build:
 
 test_script:
   - cd build
-  - ctest -V
+  - ctest -V -C Debug
   - cd ..
   - cp .\resource\sample_texture.jpg .
   - .\bin\%CONFIGURATION%\raytracing.exe --samples=8 --width=4 --height=2
