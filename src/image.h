@@ -79,7 +79,6 @@ Image::Image(const std::string &filename, int size_x, int size_y) : filename{fil
     output_file << "P3\n";
     output_file << size_x << " " << size_y << "\n";
     output_file << "255\n";
-
     line_counter = 0;
 }
 

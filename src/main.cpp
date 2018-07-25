@@ -68,7 +68,6 @@ int main(int argc, char *argv[])
 	auto max_rand_jitter = 1.0f - 1.0f / samples;
 	std::uniform_real_distribution<float> jitter(0.0f, max_rand_jitter);
 
-
     auto increment = 1.0f / (image.width() * image.height() * samples);
     auto progress = increment;
 
@@ -136,7 +135,6 @@ int main(int argc, char *argv[])
 Color ray_color(const Ray &r, Hitable *world, int depth)
 {
     HitRecord rec;
-
 
     if (world->hit(r, 0.001f, std::numeric_limits<float>::max(), rec))
     {
