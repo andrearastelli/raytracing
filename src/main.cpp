@@ -19,6 +19,7 @@
 #include "texture.h"
 #include "box.h"
 #include "constantmedium.h"
+#include "simd.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -42,11 +43,11 @@ int main(int argc, char *argv[])
 
     //Hitable *world = random_scene();
     //Hitable *world = test_perlin();
-    //Hitable *world = cornell_box();
-    Hitable *world = light_spheres();
+    Hitable *world = cornell_box();
+    //Hitable *world = light_spheres();
 
-    auto lookfrom = Vec3{10.0f, 20.0f, 10.0f};
-    auto lookat = Vec3{0.0f, 0.0f, 0.0f};
+    auto lookfrom = Vec3{278.0f, 278.0f, -800.0f};
+    auto lookat = Vec3{278.0f, 278.0f, 0.0f};
     auto aperture = 0.0f;
     auto focal_length = (Vec3(-2.0f, 2.0f, 1.0f) - Vec3(0.0f, 0.0f, -1.0f)).length();
 
@@ -143,7 +144,7 @@ Color ray_color(const Ray &r, Hitable *world, int depth)
 
         Color emitted = rec.mat_ptr->emitted(rec.u, rec.v, rec.p);
 
-        if (depth < 2 && rec.mat_ptr->scatter(r, rec, attenuation, scattered))
+        if (depth < 20 && rec.mat_ptr->scatter(r, rec, attenuation, scattered))
         {
             return emitted + attenuation * ray_color(scattered, world, depth + 1);
         }
@@ -241,11 +242,6 @@ Hitable* random_scene()
 }
 
 
-/**
- * @brief
- *
- * @return Hitable*
- */
 Hitable* test_perlin()
 {
     auto **list = new Hitable*[2];
@@ -257,11 +253,6 @@ Hitable* test_perlin()
 }
 
 
-/**
- * @brief
- *
- * @return Hitable*
- */
 Hitable* simple_light()
 {
     Texture *noiseText = new NoiseTexture(4);
@@ -276,46 +267,31 @@ Hitable* simple_light()
 }
 
 
-/**
- * @brief
- *
- * @return Hitable*
- */
 Hitable* cornell_box()
 {
-    Hitable **list = new Hitable*[1000];
-    int i = 0;
+    Hitable **list = new Hitable*[8];
+    std::size_t i = 0;
 
-    auto c_red = Color(1.0f, 0.0f, 0.0f);
     auto c_green = Color(0.0f, 1.0f, 0.0f);
     auto c_white = Color(0.8f, 0.8f, 0.8f);
-    auto c_yellow = Color(1.0f, 1.0f, 0.0f);
 
-    Material *red = new Lambertian(new ConstantTexture(c_red));
     int nx, ny, nn;
     auto file_path = "sample_texture.jpg";
     unsigned char *texture_data = stbi_load(file_path, &nx, &ny, &nn, 0);
     Material *image = new Lambertian(new ImageTexture(texture_data, nx, ny));
     Material *white = new Lambertian(new ConstantTexture(c_white));
     Material *green = new Lambertian(new ConstantTexture(c_green));
-    Material *yellow = new Lambertian(new ConstantTexture(c_yellow));
 
-    Material *light = new DiffuseLight(new ConstantTexture(Color(1.0f)));
+    Material *light = new DiffuseLight(new ConstantTexture(Color{1.0f, .0f}));
 
     list[i++] = new FlipNormals(new YZ_Rect(0, 555, 0, 555, 555, green));
     list[i++] = new YZ_Rect(0, 555, 0, 555, 0, image);
 
-    //list[i++] = new RotateY(new YZ_Rect(0, 555, 0, 555, 555, green), 90.0f);
-
-    //list[i++] = new XZ_Rect(213, 343, 227, 332, 554, light);
     list[i++] = new XZ_Rect(50, 505, 50, 505, 554, light);
 
     list[i++] = new FlipNormals(new XZ_Rect(0, 555, 0, 555, 555, white));
     list[i++] = new XZ_Rect(0, 555, 0, 555, 0, white);
     list[i++] = new FlipNormals(new XY_Rect(0, 555, 0, 555, 555, white));
-
-    // list[i++] = new Translate(new Box(Vec3(0, 0, 0), Vec3(165, 165, 165), white), Vec3(130,0,65));
-    // list[i++] = new Translate(new Box(Vec3(0, 0, 0), Vec3(165, 330, 165), white), Vec3(265,0,295));
 
     auto *b1 = new Translate(new Box(Vec3(0, 0, 0), Vec3(165, 330, 165), white), Vec3(265,0,295));
     list[i++] = new ConstantMedium(b1, 0.01f, new ConstantTexture(Color(1.0f, 1.0f, 1.0f)));
@@ -338,7 +314,7 @@ Hitable* light_spheres()
     // Lights
     for (std::size_t i=0; i<10; ++i)
     {
-        auto light_color = Color(dist(m) * 10.0f + 20.0f);
+        auto light_color = Color(dist(m) * 10.0f + 20.0f, .0f);
         auto light_material = new DiffuseLight(new ConstantTexture(light_color));
         auto position = Vec3(
                 (dist(m) * 20.0f) - 5.0f,
