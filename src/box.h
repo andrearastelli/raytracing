@@ -15,7 +15,6 @@ private:
     Hitable *list_ptr;
 
 public:
-    Box() = default;
     Box(const Vec3 &p0, const Vec3 &p1, Material *ptr);
 
     bool hit(const Ray &r, float t0, float t1, HitRecord &rec) const override;
@@ -33,18 +32,12 @@ Box::Box(const Vec3 &p0, const Vec3 &p1, Material *ptr)
 
     size_t i = 0;
 
-    /*
-    auto pxy = new XY_Rect(p0.x(), p1.x(), p0.y(), p1.y(), p1.z(), ptr);
-    auto pxz = new XZ_Rect(p0.x(), p1.x(), p0.z(), p1.z(), p1.y(), ptr);
-    auto pyz = new YZ_Rect(p0.y(), p1.y(), p0.z(), p1.z(), p1.x(), ptr);
-    */
-
     list[i++] =                 new XY_Rect(p0.x(), p1.x(), p0.y(), p1.y(), p1.z(), ptr);
     list[i++] = new FlipNormals(new XY_Rect(p0.x(), p1.x(), p0.y(), p1.y(), p0.z(), ptr));
-
+    
     list[i++] =                 new XZ_Rect(p0.x(), p1.x(), p0.z(), p1.z(), p1.y(), ptr);
     list[i++] = new FlipNormals(new XZ_Rect(p0.x(), p1.x(), p0.z(), p1.z(), p0.y(), ptr));
-
+    
     list[i++] =                 new YZ_Rect(p0.y(), p1.y(), p0.z(), p1.z(), p1.x(), ptr);
     list[i++] = new FlipNormals(new YZ_Rect(p0.y(), p1.y(), p0.z(), p1.z(), p0.x(), ptr));
 

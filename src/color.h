@@ -47,7 +47,8 @@ public:
      * @param g Green component.
      * @param b Blue component.
      */
-    Color(int r, int g, int b, int alpha=255): v{_mm_set_ps(alpha/255.0f, b/255.0f, g/255.0f, r/255.0f)} {}
+    Color(int r, int g, int b, int alpha=255)
+        : v{_mm_set_ps(alpha/255.0f, b/255.0f, g/255.0f, r/255.0f)} {}
 
     /**
      * Color float constructor.
