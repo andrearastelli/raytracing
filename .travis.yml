@@ -7,12 +7,16 @@ before_install:
   - sudo apt-get update -qq
 
 install:
+  - sudo apt-get install tree
   - sudo apt-get install -qq g++-7
   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 90
 
 script:
-  - cmake -H. -Bbuild
+  - mkdir build
   - cd build
+  - cmake ..
   - cmake --build .
+  - ctest -V
   - cd ..
-  - ./bin/raytracing
+  - cp ./resource/sample_texture.jpg .
+  - ./bin/raytracing --samples=8 --width=4 --height=2

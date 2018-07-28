@@ -18,7 +18,7 @@ Parameter parser(int argc, char *argv[])
 {
     Parameter out_param;
 
-    for(std::size_t idx=0; idx<argc; ++idx)
+    for(auto idx=0; idx<argc; ++idx)
     {
         std::string arg(argv[idx]);
         std::size_t pos = 0;

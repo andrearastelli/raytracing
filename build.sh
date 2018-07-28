@@ -6,5 +6,5 @@ fi
 
 cd build
 
-cmake -Wdev ../
+cmake -Dgtest_force_shared_crt=TRUE ..
 cmake --build .
