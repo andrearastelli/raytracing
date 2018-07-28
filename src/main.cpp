@@ -30,6 +30,7 @@ Hitable* random_scene();
 Hitable* test_perlin();
 Hitable* simple_liht();
 Hitable* cornell_box();
+void lambertian_cornell_box(Hitable **scene, Camera **camera, float aspect);
 Hitable* light_spheres();
 
 
@@ -43,25 +44,16 @@ int main(int argc, char *argv[])
 
     //Hitable *world = random_scene();
     //Hitable *world = test_perlin();
-    Hitable *world = cornell_box();
+    //Hitable *world = cornell_box();
     //Hitable *world = light_spheres();
+    Hitable *world;
+    Camera *camera;
 
-    auto lookfrom = Vec3{278.0f, 278.0f, -800.0f};
-    auto lookat = Vec3{278.0f, 278.0f, 0.0f};
-    auto aperture = 0.0f;
-    auto focal_length = (Vec3(-2.0f, 2.0f, 1.0f) - Vec3(0.0f, 0.0f, -1.0f)).length();
-
-    Camera cam{
-        lookfrom,
-        lookat,
-        Vec3::Y,
-        40,
-        static_cast<float>(image.width()) / static_cast<float>(image.height()),
-        aperture,
-        focal_length,
-        0.0f,
-        1.0f
-    };
+    lambertian_cornell_box(
+            &world,
+            &camera,
+            static_cast<float>(image.width())/ static_cast<float>(image.height())
+    );
 
 	// RANDOM GENERATORS
 	std::random_device d;
@@ -89,7 +81,7 @@ int main(int argc, char *argv[])
                 float u = (idX + jitter(m)) / static_cast<float>(image.width());
                 float v = (idY + jitter(m)) / static_cast<float>(image.height());
 
-                auto r = cam.get_ray(u, v);
+                auto r = camera->get_ray(u, v);
                 col += ray_color(r, world, 0);
 
                 progress += increment;
@@ -148,15 +140,11 @@ Color ray_color(const Ray &r, Hitable *world, int depth)
         {
             return emitted + attenuation * ray_color(scattered, world, depth + 1);
         }
-        else
-        {
-            return emitted;
-        }
+
+        return emitted;
     }
-    else
-    {
-        return Color(0.0f, 0.0f, 0.0f);
-    }
+
+    return Color(0.0f, 0.0f, 0.0f);
 }
 
 
@@ -300,6 +288,46 @@ Hitable* cornell_box()
     list[i++] = new ConstantMedium(b2, 0.01f, new ConstantTexture(Color(0.0f, 0.0f, 0.0f)));
 
     return new HitableList(list, i);
+}
+
+
+void lambertian_cornell_box(Hitable **scene, Camera **camera, float aspect)
+{
+    Hitable **list = new Hitable*[8];
+    std::size_t i = 0;
+
+    Material *red   = new Lambertian(new ConstantTexture(Color(0.65f, 0.05f, 0.05f)));
+    Material *white = new Lambertian(new ConstantTexture(Color(0.73f, 0.73f, 0.73f)));
+    Material *green = new Lambertian(new ConstantTexture(Color(0.12f, 0.45f, 0.15f)));
+    Material *light = new DiffuseLight(new ConstantTexture(Color(5.0f, 5.0f, 5.0f)));
+
+    list[i++] = new FlipNormals(new YZ_Rect(0, 555, 0, 555, 555, green));
+    list[i++] = new YZ_Rect(0, 555, 0, 555, 0, red);
+    list[i++] = new XZ_Rect(213, 343, 227, 332, 554, light);
+    list[i++] = new FlipNormals(new XZ_Rect(0, 555, 0, 555, 555, white));
+    list[i++] = new XZ_Rect(0, 555, 0, 555, 0, white);
+    list[i++] = new FlipNormals(new XY_Rect(0, 555, 0, 555, 555, white));
+    list[i++] = new Translate(new Box(Vec3(0, 0, 0), Vec3(165, 330, 165), white), Vec3(265,0,295));
+    list[i++] = new Translate(new Box(Vec3(0, 0, 0), Vec3(165, 165, 165), white), Vec3(130,0,65));
+
+    *scene = new HitableList(list, i);
+
+    auto lookfrom = Vec3(278, 278, -800);
+    auto lookat = Vec3(278, 278, 0);
+    auto dist_to_focus = 10.0f;
+    auto aperture = 0.0f;
+    auto vfov = 40.0f;
+    *camera = new Camera(
+        lookfrom,
+        lookat,
+        Vec3(0, 1, 0),
+        vfov,
+        aspect,
+        aperture,
+        dist_to_focus,
+        0.0f,
+        1.0f
+    );
 }
 
 
