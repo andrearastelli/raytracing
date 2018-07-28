@@ -116,6 +116,14 @@ Color& Color::operator/=(float a)
 }
 
 
+Color operator/(Color a, float b)
+{
+    Color res(_mm_div_ps(a.v, _mm_set1_ps(b)));
+
+    return res;
+}
+
+
 Color& Color::gamma()
 {
     //c[0] = std::sqrt(c[0]);
