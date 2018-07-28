@@ -42,10 +42,6 @@ int main(int argc, char *argv[])
 
     auto samples = input_data.samples;
 
-    //Hitable *world = random_scene();
-    //Hitable *world = test_perlin();
-    //Hitable *world = cornell_box();
-    //Hitable *world = light_spheres();
     Hitable *world;
     Camera *camera;
 
