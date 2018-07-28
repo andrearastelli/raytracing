@@ -55,3 +55,25 @@ TEST_P(TestColor_InitFromVec3, Color_init_from_vec3)
     EXPECT_EQ(c.g(), expected_result[1]);
     EXPECT_EQ(c.b(), expected_result[2]);
 }
+
+class TestColor_ColorDivFloat : public ::testing::TestWithParam<std::tuple<Color, float, std::vector<float>>> {};
+
+INSTANTIATE_TEST_CASE_P(Color_color_div_float, TestColor_ColorDivFloat, ::testing::Values(
+        std::make_tuple(Color(1.0f, 1.0f, 1.0f), 2.0f, std::vector<float>{0.5f, 0.5f, 0.5f}),
+        std::make_tuple(Color(1.0f, 1.0f, 1.0f), 1.0f, std::vector<float>{1.0f, 1.0f, 1.0f}),
+        std::make_tuple(Color(1.0f, 1.0f, 1.0f), 0.5f, std::vector<float>{2.0f, 2.0f, 2.0f})
+        ));
+
+TEST_P(TestColor_ColorDivFloat, Color_color_div_float)
+{
+    auto c = std::get<0>(GetParam());
+    auto f = std::get<1>(GetParam());
+
+    auto expected_result = std::get<2>(GetParam());
+
+    auto res = c / f;
+
+    EXPECT_EQ(res.r(), expected_result[0]);
+    EXPECT_EQ(res.g(), expected_result[1]);
+    EXPECT_EQ(res.b(), expected_result[2]);
+}
