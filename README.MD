@@ -6,11 +6,16 @@
 
 # Raytracing in One Weekend and beyond
 
-## 1.0.0
-![Imgur](resource/render_0003.png)
+## 2.0.0
+![Imgur](https://i.imgur.com/5SPowYd.png)
 
 Image info:
-- Cornell Box with volumes and textures
+- Cornell box with volumes
+
+## 1.0.0
+![Imgur](https://i.imgur.com/KLX1Kv6.png)
+
+Image info:
 - Total rendering time 216s (on windows)
 - Samples per pixel 128
 - Image resolution 400x400 px
