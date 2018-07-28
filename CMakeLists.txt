@@ -13,9 +13,29 @@ endif(MSVC)
 
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_HOME_DIRECTORY}/bin")
 
-include_directories(${CMAKE_SOURCE_DIR}/src)
-
 add_subdirectory(src)
+include_directories(${CMAKE_SOURCE_DIR}/src)
 
 target_compile_features(raytracing PUBLIC cxx_std_17)
 
+set(GTEST_LINKED_AS_SHARED_LIBRARY TRUE)
+add_subdirectory(ext/googletest)
+enable_testing()
+include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+
+file(GLOB TEST_SRC_FILES ${PROJECT_SOURCE_DIR}/tests/src/*.cpp)
+
+#if(NOT MSVC)
+foreach(_test_file ${TEST_SRC_FILES})
+    get_filename_component(_test_name ${_test_file} NAME_WE)
+    add_executable(${_test_name} ${_test_file})
+    add_dependencies(${_test_name} gtest)
+    target_link_libraries(${_test_name} gtest gtest_main ${CMAKE_THREAD_LIBS_INIT})
+    add_test(
+        NAME ${_test_name}
+        COMMAND ${_test_name}
+        WORKING_DIRECTORY "${CMAKE_HOME_DIRECTORY}/bin"
+    )
+    message("${CMAKE_HOME_DIRECTORY}/bin/${_test_name}")
+endforeach()
+#endif()

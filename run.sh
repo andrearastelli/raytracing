@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-./bin/Debug/raytracing.exe --output=test.ppm --width=200 --height=100 --samples=8
+./bin/Debug/raytracing.exe --output=test.ppm --width=400 --height=400 --samples=32

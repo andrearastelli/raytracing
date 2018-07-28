@@ -31,6 +31,8 @@ private:
     Vec3 vertical;
     Vec3 u, v, w;
     float lens_radius;
+    float time0;
+    float time1;
 
 public:
 
@@ -69,6 +71,21 @@ public:
      * @param focus_dist
      */
     Camera(Vec3 lookfrom, Vec3 lookat, Vec3 up, float vfov, float aspect, float aperture, float focus_dist);
+
+
+    /**
+     *
+     * @param lookfrom
+     * @param lookat
+     * @param up
+     * @param vfov
+     * @param aspect
+     * @param aperture
+     * @param focus_dist
+     * @param t0
+     * @param t1
+     */
+    Camera(Vec3 lookfrom, Vec3 lookat, Vec3 up, float vfov, float aspect, float aperture, float focus_dist, float t0, float t1);
 
 
     /**
@@ -136,14 +153,38 @@ Camera::Camera(Vec3 lookfrom, Vec3 lookat, Vec3 up, float vfov, float aspect, fl
 }
 
 
+Camera::Camera(Vec3 lookfrom, Vec3 lookat, Vec3 up, float vfov, float aspect, float aperture, float focus_dist, float t0, float t1)
+{
+    time0 = t0;
+    time1 = t1;
+    lens_radius = aperture / 2.0f;
+
+    auto theta = static_cast<float>(vfov * M_PI / 180.0f);
+    auto half_height = tan(theta / 2.0f);
+    auto half_width = aspect * half_height;
+
+    origin = lookfrom;
+
+    w = unit_vector(lookfrom - lookat);
+    u = unit_vector(cross(up, w));
+    v = cross(w, u);
+
+    lower_left_corner = origin - half_width * focus_dist * u - half_height * focus_dist * v - focus_dist * w;
+    horizontal = 2.0f * half_width * focus_dist * u;
+    vertical = 2.0f * half_height * focus_dist * v;
+}
+
+
 Ray Camera::get_ray(float s, float t)
 {
     auto rd = lens_radius * random_in_unit_disc();
     auto offset = u * rd.x() + v * rd.y();
+    auto time = time0 + dist(m) * (time1 - time0);
 
     return {
         origin + offset,
-        lower_left_corner + s * horizontal + t * vertical - origin - offset
+        lower_left_corner + s * horizontal + t * vertical - origin - offset,
+        time
     };
 }
 
