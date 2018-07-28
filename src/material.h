@@ -21,7 +21,10 @@ class Material
 {
 	
 public:
-    virtual bool scatter(const Ray& ray_in, const HitRecord& hit, Color& attenuation, Ray& scattered) const = 0;
+    virtual bool scatter(const Ray& ray_in, const HitRecord& hit, Color& attenuation, Ray& scattered, float& pdf) const
+    { return false; };
+
+    virtual float scattering_pdf(const Ray& ray_in, const HitRecord& hit, const Ray& scattered) const = 0;
 
     virtual Color emitted(float u, float v, const Vec3& p) const 
     {
@@ -78,7 +81,7 @@ Vec3 random_in_unit_sphere()
 
 	} while (p.squared_length() >= 1.0f);
 
-	return p;
+	return unit_vector(p);
 }
 
 /**
@@ -93,16 +96,29 @@ public:
 
 	Texture *albedo;
 
-	bool scatter(const Ray& ray_in, const HitRecord& hit, Color& attenuation, Ray& scattered) const override
+	bool scatter(const Ray& ray_in, const HitRecord& hit, Color& attenuation, Ray& scattered, float& pdf) const override
 	{
 		Vec3 target = hit.p + hit.normal + random_in_unit_sphere();
-		scattered = Ray(hit.p, target - hit.p, ray_in.time());
+		scattered = Ray(hit.p, unit_vector(target - hit.p), ray_in.time());
 		attenuation = albedo->value(hit.u, hit.v, hit.p);
+		pdf = dot(hit.normal, scattered.direction()) / M_PI;
+		//pdf = static_cast<float>(0.5f / M_PI);
     
 		return true;
 	}
 
+	float scattering_pdf(const Ray& ray_in, const HitRecord& hit, const Ray& scattered) const override;
+
 };
+
+float Lambertian::scattering_pdf(const Ray &ray_in, const HitRecord &hit, const Ray &scattered) const
+{
+    auto cosine = dot(hit.normal, unit_vector(scattered.direction()));
+    if (cosine < 0) cosine = 0;
+
+    return static_cast<float>(cosine / M_PI);
+}
+
 
 class Metal : public Material
 {
@@ -112,7 +128,7 @@ public:
 	Color albedo;
 	float fuzziness;
 
-	bool scatter(const Ray& ray_in, const HitRecord& hit, Color& attenuation, Ray& scattered) const override
+	bool scatter(const Ray& ray_in, const HitRecord& hit, Color& attenuation, Ray& scattered) const
 	{
 		Vec3 reflected = reflect(unit_vector(ray_in.direction()), hit.normal);
 		scattered = Ray(hit.p, reflected + fuzziness * random_in_unit_sphere(), ray_in.time());
@@ -130,7 +146,7 @@ public:
 
     explicit Dielectric(float ri) : ref_idx(ri) {}
 
-    bool scatter(const Ray& r_in, const HitRecord& hit, Color& attenuation, Ray& scattered) const override
+    bool scatter(const Ray& r_in, const HitRecord& hit, Color& attenuation, Ray& scattered) const
     {
         Vec3 outward_normal;
         Vec3 reflected = reflect(r_in.direction(), hit.normal);
@@ -178,9 +194,14 @@ public:
 
     explicit DiffuseLight(Texture *a): emit(a) {}
 
-    bool scatter(const Ray& ray_in, const HitRecord& hit, Color& attenuation, Ray& scattered) const override
+    bool scatter(const Ray& ray_in, const HitRecord& hit, Color& attenuation, Ray& scattered, float& pdf) const override
     { 
         return false; 
+    }
+
+    float scattering_pdf(const Ray &ray_in, const HitRecord &hit, const Ray &scattered) const override
+    {
+        return false;
     }
 
     Color emitted(float u, float v, const Vec3& p) const override
@@ -199,7 +220,7 @@ private:
 public:
     explicit Isotropic(Texture *a) : albedo(a) {}
 
-    bool scatter(const Ray &r_in, const HitRecord &rec, Color &attenuation, Ray &scattered) const override;
+    bool scatter(const Ray &r_in, const HitRecord &rec, Color &attenuation, Ray &scattered) const;
 
 };
 
