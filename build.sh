@@ -6,5 +6,5 @@ fi
 
 cd build
 
-cmake -DGTEST_LINKED_AS_SHARED_LIBRARY=1 -Wdev ../
-cmake -DGTEST_LINKED_AS_SHARED_LIBRARY=1 --build .
+cmake -Dgtest_force_shared_crt=TRUE ..
+cmake --build .
