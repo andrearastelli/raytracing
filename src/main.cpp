@@ -18,7 +18,7 @@
 #include "parser.h"
 #include "texture.h"
 #include "box.h"
-#include "constantmedium.h"
+// #include "constantmedium.h"
 #include "simd.h"
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -26,12 +26,12 @@
 
 
 Color ray_color(const Ray &r, Hitable *world, int depth);
-Hitable* random_scene();
-Hitable* test_perlin();
-Hitable* simple_liht();
-Hitable* cornell_box();
+// Hitable* random_scene();
+// Hitable* test_perlin();
+// Hitable* simple_liht();
+// Hitable* cornell_box();
 void lambertian_cornell_box(Hitable **scene, Camera **camera, float aspect);
-Hitable* light_spheres();
+// Hitable* light_spheres();
 
 
 int main(int argc, char *argv[])
@@ -133,12 +133,16 @@ Color ray_color(const Ray &r, Hitable *world, int depth)
     {
         Ray scattered;
         Color attenuation;
-
         Color emitted = rec.mat_ptr->emitted(rec.u, rec.v, rec.p);
+        float pdf;
+        Color albedo;
 
-        if (depth < 20 && rec.mat_ptr->scatter(r, rec, attenuation, scattered))
+        if (depth < 2 && rec.mat_ptr->scatter(r, rec, albedo, scattered, pdf))
         {
-            return emitted + attenuation * ray_color(scattered, world, depth + 1);
+            // return emitted + attenuation * ray_color(scattered, world, depth + 1);
+            return emitted +
+                    albedo * rec.mat_ptr->scattering_pdf(r, rec, scattered) *
+                    ray_color(scattered, world, depth + 1) / pdf;
         }
 
         return emitted;
@@ -153,7 +157,7 @@ Color ray_color(const Ray &r, Hitable *world, int depth)
  *
  * @return Hitable* The generated scene as a HitableList object.
  */
-Hitable* random_scene()
+/*Hitable* random_scene()
 {
     auto n = 500;
     auto **list = new Hitable*[n+1];
@@ -227,10 +231,10 @@ Hitable* random_scene()
     list[i++] = new Sphere({4.0f, 1.0f, 0.0f}, 1.0f, new Metal({0.7f, 0.6f, 0.5f}, 0.0f));
 
     return new HitableList(list, i);
-}
+}*/
 
 
-Hitable* test_perlin()
+/*Hitable* test_perlin()
 {
     auto **list = new Hitable*[2];
 
@@ -238,10 +242,10 @@ Hitable* test_perlin()
     list[1] = new XY_Rect(3, 5, 1, 3, -2, new Lambertian(new ConstantTexture(Color(1.0f, 0.0f, 0.0f))));
 
     return new HitableList(list, 2);
-}
+}*/
 
 
-Hitable* simple_light()
+/*Hitable* simple_light()
 {
     Texture *noiseText = new NoiseTexture(4);
 
@@ -252,10 +256,10 @@ Hitable* simple_light()
     list[3] = new XY_Rect(3, 5, 1, 3, -2, new DiffuseLight(new ConstantTexture(Color(4.0f, 4.0f, 4.0f))));
 
     return new HitableList(list, 4);
-}
+}*/
 
 
-Hitable* cornell_box()
+/*Hitable* cornell_box()
 {
     Hitable **list = new Hitable*[8];
     std::size_t i = 0;
@@ -288,7 +292,7 @@ Hitable* cornell_box()
     list[i++] = new ConstantMedium(b2, 0.01f, new ConstantTexture(Color(0.0f, 0.0f, 0.0f)));
 
     return new HitableList(list, i);
-}
+}*/
 
 
 void lambertian_cornell_box(Hitable **scene, Camera **camera, float aspect)
@@ -331,7 +335,7 @@ void lambertian_cornell_box(Hitable **scene, Camera **camera, float aspect)
 }
 
 
-Hitable* light_spheres()
+/*Hitable* light_spheres()
 {
     auto **list = new Hitable*[1000];
     auto idx = std::size_t(0);
@@ -373,4 +377,4 @@ Hitable* light_spheres()
     }
 
     return new HitableList(list, idx);
-}
+}*/
