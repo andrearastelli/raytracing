@@ -4,3 +4,6 @@
 [submodule "ext/alembic"]
 	path = ext/alembic
 	url = https://github.com/alembic/alembic.git
+[submodule "ext/openexr"]
+	path = ext/openexr
+	url = https://github.com/wjakob/openexr.git

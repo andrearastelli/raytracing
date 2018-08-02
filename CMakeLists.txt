@@ -14,9 +14,9 @@ endif(MSVC)
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_HOME_DIRECTORY}/bin")
 
 add_subdirectory(ext/openexr)
-message("OpenEXR source dir: ${OPENEXR_SOURCE_DIR}")
+message("OpenEXR include: ${OpenEXR_includedir}")
 add_subdirectory(ext/alembic)
-message("Alembic source dir: ${ALEMBIC_SOURCE_DIR}")
+message("Alembic source dir: ${ALEMBIC_VERSION}")
 
 add_subdirectory(src)
 include_directories(${CMAKE_SOURCE_DIR}/src)
